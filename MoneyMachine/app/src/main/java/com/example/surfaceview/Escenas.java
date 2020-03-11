@@ -156,6 +156,11 @@ public class Escenas {
     }//end constructor
 
 
+    /**
+     * Metodo que se utiliza para dibujar en el canvas.
+     *
+     * @param c  Canvas en el que se va a dibujar
+     */
     public void dibujar(Canvas c){
         //Atributos de los pinceles
         pincelTxt.setTextSize(70);
@@ -176,6 +181,10 @@ public class Escenas {
     //superficie de dibujo para guardar datos en el shared preference
     //Tambien se utilizara en un botón del menú de opciones para guardar cada vez que el usuario
     //quiera
+
+    /**
+     *
+     */
     public void guardarDatos(){
 
         editor.putInt("horaAn", currentTime.getHours());
@@ -184,7 +193,13 @@ public class Escenas {
     }//end method guardarDatos
 
 
-    //Metodo que controla el tiempo transcurrido desde la ultima conexión
+    /**
+     * Calcula la diferencia de tiempo entre la ultima hora de
+     * conexión y la actual y guarda ese valor en la variable
+     * diffTiempo.
+     *
+     * diffTiempo se mide en minutos.
+     */
     public void controlTemporal(){
 
         diffTiempo = currentTime.getHours() - horaAn;
@@ -223,10 +238,6 @@ public class Escenas {
         }//end else
     }//end method control temporal
 
-
-
-
-
     //Metodo que calcula los beneficios que se generan de forma offline
     public void calcularDatos(){
 
@@ -261,15 +272,11 @@ public class Escenas {
             trabajadores.mensajeBeneficios = true;
         }//end if
 
-
         //Actualización de los datos en el shared preference
         editor.putInt("energiaTbj", trabajadores.energia);
         editor.putInt("money", money);
         editor.putInt("moneyOffline", moneyOffline);
         editor.commit();
-
-
-
     }//end method calcular Datos
 
 
@@ -279,7 +286,6 @@ public class Escenas {
 
 
     public int  onTouchEvent(MotionEvent event){
-
         return numEscena;
     }//end onTouchEvent
 
