@@ -30,6 +30,8 @@ public class pantallaAvisos {
         this.pincelFondo = pincelFondo;
         this.pincelCuadro = pincelCuadro;
         this.pincelTexto = pincelTexto;
+        btnAceptar = new Rect(anchoPantalla/2 - 300, altoPantalla/2 + 150, anchoPantalla/2, altoPantalla/2 + 300);
+        btnCancelar = new Rect(anchoPantalla/2, altoPantalla/2 + 150, anchoPantalla/2 + 300, altoPantalla/2 + 300);
     }//end constructor
 
     public int getAltoPantalla() {
@@ -97,8 +99,6 @@ public class pantallaAvisos {
     }
 
 
-
-
     //El bitmap fondo y auxiliar sirven para poder poner la imagen que va a aparecer con transpariencia
     //Necesario que el texto no se salga del cuadro(no creo que lo haga de forma correcta, probare cuantas letras
     //entran mas o menos cuando cambie la fuente, y añadire un salto de linea y pa diante)
@@ -124,8 +124,7 @@ public class pantallaAvisos {
         aux = BitmapFactory.decodeResource(context.getResources(), R.drawable.mejoras);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
         cuadro = new Rect(anchoPantalla/2 - 300, altoPantalla/2 - 300, anchoPantalla/2 + 300, altoPantalla/2 + 300);
-        btnAceptar = new Rect(anchoPantalla/2 - 300, altoPantalla/2 + 150, anchoPantalla/2, altoPantalla/2 + 300);
-        btnCancelar = new Rect(anchoPantalla/2, altoPantalla/2 + 150, anchoPantalla/2 + 300, altoPantalla/2 + 300);
+
 
 
         //Zona de dibujado

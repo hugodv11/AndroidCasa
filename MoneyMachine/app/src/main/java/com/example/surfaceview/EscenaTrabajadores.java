@@ -19,7 +19,7 @@ public class EscenaTrabajadores extends Escenas {
     //Constructor
     public EscenaTrabajadores(int numEscena, Context context, int altoPantalla, int anchoPantalla) {
         super(numEscena, context, altoPantalla, anchoPantalla);
-        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.obra);
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.back);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
         indicador1 = new Rect(anchoPantalla/10, altoPantalla - 400, anchoPantalla/10 * 3, altoPantalla -100);
         indicador2 = new Rect(anchoPantalla/10 * 4, altoPantalla - 400, anchoPantalla/10 * 6, altoPantalla -100);

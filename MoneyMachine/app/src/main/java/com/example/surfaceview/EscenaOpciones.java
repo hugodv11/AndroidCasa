@@ -18,14 +18,18 @@ public class EscenaOpciones extends Escenas {
 
     Rect btnVolver, btnBorrarDatos;
 
-
+    Bitmap bitmapVolver;
 
     public EscenaOpciones(int numEscena, Context context, int altoPantalla, int anchoPantalla) {
         super(numEscena, context, altoPantalla, anchoPantalla);
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.opciones);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
-        btnVolver = new Rect(anchoPantalla - 100, 0, anchoPantalla, 100);
+
+        btnVolver = new Rect(anchoPantalla - anchoPantalla/9, 0, anchoPantalla, anchoPantalla/9);
         btnBorrarDatos = new Rect(100, altoPantalla - 300, 300, altoPantalla - 50);
+
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.derecha);
+        bitmapVolver = aux.createScaledBitmap(aux,btnVolver.width(), btnVolver.height(),true);
     }//end constructor
 
 
@@ -33,7 +37,7 @@ public class EscenaOpciones extends Escenas {
     public void dibujar(Canvas c) {
         pincelRec.setColor(Color.RED);
         c.drawBitmap(bitmapFondo,0, 0, null);
-        c.drawRect(btnVolver, pincelRec);
+        c.drawBitmap(bitmapVolver, anchoPantalla - btnVolver.width(), 0,null);
         c.drawRect(btnBorrarDatos, pincelRec);
     }//end dibujar
 
