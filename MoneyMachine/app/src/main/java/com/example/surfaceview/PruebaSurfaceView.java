@@ -28,6 +28,7 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
     private int altoPantalla = 1;         //Alto de pantalla, su valor se actualiza en el método SurfaceChanged
     private  Hilo hilo;                   //Hilo encargado de dibujar y actualizar física
     private boolean funcionando = false;  //Control del hilo
+    private int btnPulsado, btnNormal;
 
     //Variables control de escenas
     Escenas escenaActual;
@@ -42,6 +43,8 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         hilo = new Hilo();
         setFocusable(true);
         detectorDeGestos = new GestureDetectorCompat(context, new DetectorDeGestos());
+        btnNormal = R.drawable.boton;
+        btnPulsado = R.drawable.botonpulsado;
 
     }//end contructor
 
@@ -54,14 +57,26 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         //y no tambien cuando se levanta el dedo, asi evitamos pulsaciones dobles.
         switch (event.getAction())
         {
+            //Dependiendo de si soltamos o apretamos en la pantalla
+            //cambiamos en la clase principal la foto del botón
             case MotionEvent.ACTION_DOWN:
-            nuevaEscena = escenaActual.onTouchEvent(event);
-            break;
+                nuevaEscena = escenaActual.onTouchEvent(event);
+                if(escenaActual instanceof EscenaPrincipal ){
+                    ((EscenaPrincipal) escenaActual).setImagenBoton(btnPulsado);
+                }//end if
+                break;
+
+            case MotionEvent.ACTION_UP:
+                if(escenaActual instanceof EscenaPrincipal ){
+                    ((EscenaPrincipal) escenaActual).setImagenBoton(btnNormal);
+                    ((EscenaPrincipal) escenaActual).pulsadoBoton = false;
+                }//end if
+                break;
         }//end switch
         //Control de escenas
         if(nuevaEscena != escenaActual.numEscena){
             switch(nuevaEscena){
-                case 1 :  escenaActual = new EscenaPrincipal(1, context,altoPantalla,anchoPantalla);
+                case 1 :  escenaActual = new EscenaPrincipal(1, context,altoPantalla,anchoPantalla, btnNormal);
                     break;
                 case 2 :  escenaActual = new EscenaMejoras(2, context,altoPantalla,anchoPantalla);
                     break;
@@ -103,7 +118,7 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
         anchoPantalla = width;
         altoPantalla = height;
-        escenaActual = new EscenaPrincipal(1, context,altoPantalla,anchoPantalla);
+        escenaActual = new EscenaPrincipal(1, context,altoPantalla,anchoPantalla, btnNormal);
         //Control temporal y calculo de los datos que lanzamos cuando le damos
         //valor a escenaActual por primera vez.
         escenaActual.controlTemporal();

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.media.Image;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;

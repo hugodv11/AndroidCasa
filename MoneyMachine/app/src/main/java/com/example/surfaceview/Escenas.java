@@ -6,8 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
@@ -35,6 +37,8 @@ public class Escenas {
 
     //Pinceles//Cambiar a una clase
     Paint pincelTxt = new Paint();
+    //Sirve para cambiar la fuente
+    Typeface faw;
     Paint pincelRec = new Paint();
     Paint pincelPrueba = new Paint();
     //Pinceles que se usan para la creación de cuadros de dialogo
@@ -167,7 +171,10 @@ public class Escenas {
      */
     public void dibujar(Canvas c){
         //Atributos de los pinceles
-        pincelTxt.setTextSize(70);
+        //Cambiamos la fuente al pincel que utilizamos para pintar el texto
+        faw = Typeface.createFromAsset(context.getAssets(), "acknowtt.ttf");
+        pincelTxt.setTypeface(faw);
+        pincelTxt.setTextSize(80);
         pincelTxt.setAntiAlias(true);
         pincelTxt.setTextAlign(Paint.Align.CENTER);
         pincelTxt.setColor(Color.BLACK);

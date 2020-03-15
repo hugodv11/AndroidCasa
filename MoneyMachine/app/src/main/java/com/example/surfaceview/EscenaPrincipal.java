@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.AudioManager;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
@@ -26,6 +27,23 @@ public class EscenaPrincipal extends Escenas {
     Timer timer;
     int gap=2000;
     long tempTiempo=0;
+    int imagenBoton;
+
+    boolean pulsadoBoton;
+
+    public int getImagenBoton() {
+        return imagenBoton;
+    }
+
+    public void setImagenBoton(int imagenBoton) {
+        if(pulsadoBoton) {
+            aux = BitmapFactory.decodeResource(context.getResources(), imagenBoton);
+            bitmapBtn = aux.createScaledBitmap(aux, pulsador.width(), pulsador.height(), true);
+            this.imagenBoton = imagenBoton;
+        }//end if
+
+    }//end set
+
 
     int randomPosX;
     movimientoNumero mov;
@@ -41,9 +59,9 @@ public class EscenaPrincipal extends Escenas {
     Bitmap bitmapOpciones, bitmapMejoras, bitmapBtn;
 
 
-    public EscenaPrincipal(int numEscena, Context context, int altoPantalla, int anchoPantalla) {
+    public EscenaPrincipal(int numEscena, Context context, int altoPantalla, int anchoPantalla, int imagen) {
         super(numEscena, context, altoPantalla, anchoPantalla);
-
+        this.imagenBoton = imagen;
         //Imagen de fondo
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.oficina);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
@@ -62,7 +80,7 @@ public class EscenaPrincipal extends Escenas {
         bitmapMejoras = aux.createScaledBitmap(aux, btnOpciones.width(), btnOpciones.height(), true);
 
         //Imagen del botón de la mitad de la pantalla
-        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.boton);
+        aux = BitmapFactory.decodeResource(context.getResources(), imagenBoton);
         bitmapBtn = aux.createScaledBitmap(aux, pulsador.width(), pulsador.height(), true);
 
 
@@ -83,11 +101,9 @@ public class EscenaPrincipal extends Escenas {
         mediaPlayer = MediaPlayer.create(context, R.raw.principal);
         mediaPlayer.setVolume(1, 1);
         //Comentado para que no de por culo
-        //mediaPlayer.start();
+        mediaPlayer.start();
 
-
-
-
+        pulsadoBoton = false;
         moverNumero = false;
 
         cuadroConBotones = new pantallaAvisos(altoPantalla,anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
@@ -208,6 +224,10 @@ public class EscenaPrincipal extends Escenas {
                 mov = new movimientoNumero(money, 150, p);
                 moverNumero = true;
                  */
+                //Si pulsamos dentro del boton cambiamos su sprite
+                pulsadoBoton = true;
+
+
 
                 return numEscena;
             }//end if
@@ -232,7 +252,6 @@ public class EscenaPrincipal extends Escenas {
 
         return numEscena;
    }//end onTouchEvent
-
 
 
     //Tenemos un grave problema con esta pta mierda y ya llevas 4h, mañana recien levantadito le das otra
