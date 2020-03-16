@@ -24,7 +24,7 @@ public class EscenaPrincipal extends Escenas {
     Rect pulsador, btnMejora, btnOpciones;
 
 
-    Timer timer;
+    Timer timer, timerEventos;
     int gap=2000;
     long tempTiempo=0;
     int imagenBoton;
@@ -48,7 +48,7 @@ public class EscenaPrincipal extends Escenas {
     int randomPosX;
     movimientoNumero mov;
     Boolean moverNumero;
-    Boolean flag = true;
+
 
 
     avisos aviso;
@@ -67,7 +67,7 @@ public class EscenaPrincipal extends Escenas {
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
 
         //Cuadrados que se utilizaran para saber si se a pulsado en ellos
-        pulsador = new Rect(anchoPantalla / 3,(altoPantalla/3) * 2,anchoPantalla - anchoPantalla / 3,altoPantalla - anchoPantalla / 3);
+        pulsador = new Rect(anchoPantalla / 3,(altoPantalla/5) * 4,anchoPantalla - anchoPantalla / 3,altoPantalla - altoPantalla / 12);
         btnMejora = new Rect(anchoPantalla - anchoPantalla/9, 0, anchoPantalla, anchoPantalla/9);
         btnOpciones = new Rect(0, 0, anchoPantalla/9,anchoPantalla/9);
 
@@ -84,7 +84,7 @@ public class EscenaPrincipal extends Escenas {
         bitmapBtn = aux.createScaledBitmap(aux, pulsador.width(), pulsador.height(), true);
 
 
-        //Timer
+        //Timer del autoclick
         TimerTask timerTask = new TimerTask() {
             //Dentro de run es donde se pone todo el codigo
             public void run() {
@@ -132,9 +132,7 @@ public class EscenaPrincipal extends Escenas {
             //Imagenes de los botones
             c.drawBitmap(bitmapOpciones,0, 0, null);
             c.drawBitmap(bitmapMejoras,anchoPantalla - btnOpciones.width(), 0,null);
-
-
-            c.drawBitmap(bitmapBtn, anchoPantalla/3, (altoPantalla / 3) * 2, null);
+            c.drawBitmap(bitmapBtn, anchoPantalla / 3,(altoPantalla/5) * 4, null);
 
             //Si los trabajadores han ganado algo offline lo mostramos
             if(trabajadores.mensajeBeneficios){
@@ -189,16 +187,16 @@ public class EscenaPrincipal extends Escenas {
         int x = (int)event.getX();
         int y = (int)event.getY();
 
-        //comprobar();
+        comprobar();
 
         if(aviso.isHayAviso()) {
             if(cuadroConBotones.btnAceptar.contains(x, y)){
-                respuesta(true);
+                cuadroAviso.setTexto(aviso.respuesta(true));
                 aviso.setRespuesta(true);
                 aviso.setHayAviso(false);
             }//end if
             if(cuadroConBotones.btnCancelar.contains(x, y)){
-                respuesta(false);
+                cuadroAviso.setTexto(aviso.respuesta(false));
                 aviso.setRespuesta(true);
                 aviso.setHayAviso(false);
             }//end if
@@ -217,6 +215,8 @@ public class EscenaPrincipal extends Escenas {
                 //Sonido que se genera
                 int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 efectos.play(sonidoCoin,1,1,1,0,1);
+
+
                 /*
                 //Movimiento del numero por pantalla
                 randomPosX = new Random().nextInt(pulsador.width()) + anchoPantalla/3;
@@ -248,18 +248,21 @@ public class EscenaPrincipal extends Escenas {
         }//end if
 
 
-
-
         return numEscena;
    }//end onTouchEvent
 
 
-    //Tenemos un grave problema con esta pta mierda y ya llevas 4h, mañana recien levantadito le das otra
-    //pasadiña. Ponte ahora con otras cosas meu, dejo comentado arriba la llamada a este metodo
+
+    //Vale, en le objeto avisos guardas una flag por cada posible evento, las inicias a true
+    //y las pones a false una vez que salte ese evento, y para no joder las cosas cada vez que
+    //cambias de pantalla, lo que haces es guardar el objeto avisos en el shared Preference y
+    //magia colgado, tambien pense llamar al metodo comprobar en vez de en el onTouchEvent, en un timer
+    //creado especificamente para los eventos y los logros(porque los logros funcionan practicamente igual
+    //que los eventos)
     public void comprobar(){
         //Comprobar aqui que texto devolver
 
-        if(money == 50 && flag) {
+        if(money == 50) {
             String text = "Tus trabajadores están hambrientos.\n" +
                     "¿Que tal si organizas una cena para\n" +
                     "toda la plantilla?";
@@ -267,32 +270,19 @@ public class EscenaPrincipal extends Escenas {
             cuadroConBotones.setTexto(text);
             aviso.setNumAviso(1);
             aviso.setHayAviso(true);
-            flag = false;
         }//end if
 
     }//end method probar
 
 
-    public void respuesta(boolean caso){
-        switch (aviso.getNumAviso()){
-
-            case 1:
-                if(caso){
-                    cuadroAviso.setTexto("Tus trabajadores estan más contentos!!!");
-                }//end if
-                else{
-                    cuadroAviso.setTexto("Tus trabajadores se desaniman un poco!!!");
-                }//end else
-
-                break;
-        }//end switch
 
 
 
 
 
 
-    }//end method respuesta
+
+
 
 
 }//end class EscenaPrincipal

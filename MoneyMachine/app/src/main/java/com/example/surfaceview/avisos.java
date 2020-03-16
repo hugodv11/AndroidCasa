@@ -16,6 +16,7 @@ public class avisos {
         this.cuadroBotones = cuadroBotones;
         this.hayAviso = false;
         this.respuesta = false;
+        this.numAviso = 0;
     }//end contructor
 
 
@@ -44,6 +45,26 @@ public class avisos {
     }
 
 
+
+    //Metodo que tendra unas respuestas dependiendo
+    //del evento activado
+    public String respuesta(boolean caso){
+        switch (getNumAviso()){
+            case 1:
+                if(caso){
+                    return "Tus trabajadores estan más contentos!!!";
+                }//end if
+                else{
+                    return "Tus trabajadores se desaniman un poco!!!";
+                }//end else
+
+
+
+            default:
+                return "Locooo";
+
+        }//end switch
+    }//end method respuesta
 
 
 }//end class avisos
