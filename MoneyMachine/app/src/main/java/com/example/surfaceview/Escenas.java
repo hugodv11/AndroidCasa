@@ -73,6 +73,7 @@ public class Escenas {
     //Variables con los valores que rescatamos del shared preference
     int money, dineroPulsacion, autoclick, tiempoAutoclick, moneyOffline;
     int costoMejoraPulsacion, costoMejoraAutoclick, costoTiempoAutoclick;
+    int rellenarEnergia;
 
     int horaAn, minutosAn, diffTiempo, diffMin;
 
@@ -153,6 +154,7 @@ public class Escenas {
         costoMejoraPulsacion = preferences.getInt("costoMejoraPulsacion", 4);
         costoMejoraAutoclick = preferences.getInt("costoMejoraAutoclick", 30);
         costoTiempoAutoclick = preferences.getInt("costoTiempoAutoClick", 300);
+        rellenarEnergia = preferences.getInt("rellenarEnergia", 1000);
 
         //Valores de la clase Trabajadores
         trabajadores.numero = preferences.getInt("numeroTrabajadores", 5);
@@ -267,7 +269,11 @@ public class Escenas {
         }//end else
     }//end method control temporal
 
+
+
     //Metodo que calcula los beneficios que se generan de forma offline
+    //CUando el jugador empieza de 0, falla, creo que pasa cuando lo instala
+    //Echale un ojo
     public void calcularDatos(){
 
         //primero calculamos el dinero que generan cada trabajador
@@ -285,17 +291,6 @@ public class Escenas {
         money += trabajadores.dineroCiclo * trabajadores.ciclosCompletados;
         moneyOffline = trabajadores.dineroCiclo * trabajadores.ciclosCompletados;
         trabajadores.energia -= trabajadores.ciclosCompletados * trabajadores.costeEnergia;
-
-        /*
-        Log.i("tiempo", "salud = " + trabajadores.salud);
-        Log.i("tiempo", "dineroBase = " + trabajadores.dineroBase);
-        Log.i("tiempo", "ganancias = " + trabajadores.ganancias);
-        Log.i("tiempo", "ciclosDisponibles = " + trabajadores.ciclosDisponibles);
-        Log.i("tiempo", "ciclosCompletados = " + trabajadores.ciclosCompletados);
-        Log.i("tiempo", "calculo" + (trabajadores.dineroCiclo * trabajadores.ciclosCompletados));
-        Log.i("tiempo", "moneyOffline " + moneyOffline);
-        Log.i("tiempo", "energia trabajadores " + trabajadores.energia);
-        */
 
         if(moneyOffline > 0){
             trabajadores.mensajeBeneficios = true;

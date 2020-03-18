@@ -1,9 +1,11 @@
 package com.example.surfaceview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.Image;
 import android.view.MotionEvent;
@@ -13,27 +15,37 @@ import java.util.HashMap;
 
 public class EscenaTrabajadores extends Escenas {
 
-    Rect indicador1, indicador2, indicador3, btnVolver;
-    Rect btnMas, btnMenos;
-    int numPosX, numPosY, enerPosX, enerPosY, vitPosX, vitPosY;
+    Rect btnNumTrabajadores, btnSalud, btnEnergia, btnVolver, btnContenedor, btnSubirEnergia;
+    Bitmap bitmapNumero, bitmapSalud, bitmapEnergia, bitmapVolver, bitmapContenedor;
 
     //Constructor
     public EscenaTrabajadores(int numEscena, Context context, int altoPantalla, int anchoPantalla) {
         super(numEscena, context, altoPantalla, anchoPantalla);
-        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.back);
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.trabajadores);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
-        indicador1 = new Rect(anchoPantalla/10, altoPantalla - 400, anchoPantalla/10 * 3, altoPantalla -100);
-        indicador2 = new Rect(anchoPantalla/10 * 4, altoPantalla - 400, anchoPantalla/10 * 6, altoPantalla -100);
-        indicador3 = new Rect(anchoPantalla - anchoPantalla/10 * 3, altoPantalla - 400, anchoPantalla- anchoPantalla/10, altoPantalla -100);
-        numPosX = indicador1.centerX();
-        numPosY = indicador1.centerY();
-        enerPosX = indicador2.centerX();
-        enerPosY = indicador2.centerY();
-        vitPosX = indicador3.centerX();
-        vitPosY = indicador3.centerY();
-        btnVolver = new Rect(0, 0, 100, 100);
-        btnMenos = new Rect(70, 300, 270, 500);
-        btnMas = new Rect(800, 300, 1000, 500);
+        btnVolver = new Rect(0, 0, anchoPantalla/9,anchoPantalla/9);
+        btnNumTrabajadores = new Rect(anchoPantalla/10, altoPantalla - altoPantalla/6, anchoPantalla/10 * 3, altoPantalla - altoPantalla/20);
+        btnSalud = new Rect(anchoPantalla/10 * 4, altoPantalla - altoPantalla/6, anchoPantalla/10 * 6, altoPantalla - altoPantalla/20);
+        btnEnergia = new Rect(anchoPantalla - anchoPantalla/10 * 3, altoPantalla - altoPantalla/6, anchoPantalla- anchoPantalla/10, altoPantalla - altoPantalla/20);
+        btnContenedor = new Rect(anchoPantalla/13, altoPantalla - altoPantalla/5, anchoPantalla -anchoPantalla/13, altoPantalla - altoPantalla/25);
+        btnSubirEnergia = new Rect(anchoPantalla - anchoPantalla/10 * 3, altoPantalla - altoPantalla/5 - altoPantalla/17, anchoPantalla- anchoPantalla/10, altoPantalla - altoPantalla/5);
+
+        //Imagen de los botones
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.num);
+        bitmapNumero = aux.createScaledBitmap(aux, btnNumTrabajadores.width(), btnNumTrabajadores.height(), true);
+
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.energia);
+        bitmapEnergia = aux.createScaledBitmap(aux, btnEnergia.width(), btnEnergia.height(), true);
+
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.salud);
+        bitmapSalud = aux.createScaledBitmap(aux, btnSalud.width(), btnSalud.height(), true);
+
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.izquierda);
+        bitmapVolver = aux.createScaledBitmap(aux, btnVolver.width(), btnVolver.height(), true);
+
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.contenedor);
+        bitmapContenedor = aux.createScaledBitmap(aux, btnContenedor.width(), btnContenedor.height(), true);
+
 
     }//end constructor
 
@@ -41,17 +53,18 @@ public class EscenaTrabajadores extends Escenas {
     public void dibujar(Canvas c) {
 
         c.drawBitmap(bitmapFondo, 0 ,0, pincelRec);
-        c.drawRect(indicador1, pincelRec);
-        c.drawRect(indicador2, pincelRec);
-        c.drawRect(indicador3, pincelRec);
-        c.drawRect(btnVolver, pincelRec);
-        c.drawRect(btnMas, pincelRec);
-        c.drawRect(btnMenos, pincelRec);
-        //c.drawText("" + numeroTbj, anchoPantalla/ 10 * 2, altoPantalla - 200, pincelTxt);
-        c.drawText("" + trabajadores.numero, numPosX, numPosY + 20, pincelTxt);
-        c.drawText(trabajadores.energia + "%", enerPosX, enerPosY + 20, pincelTxt);
-        c.drawText(trabajadores.salud + "%", vitPosX, vitPosY + 20, pincelTxt);
-        c.drawText(trabajadores.salario + "",550, 425, pincelTxt);
+        c.drawRect(btnSubirEnergia, pincelRec);
+        //Imagenes
+        c.drawBitmap(bitmapContenedor, anchoPantalla/13, altoPantalla - altoPantalla/5, null);
+        c.drawBitmap(bitmapNumero, anchoPantalla/10, altoPantalla - altoPantalla/6, null);
+        c.drawBitmap(bitmapSalud, anchoPantalla/10 * 4, altoPantalla - altoPantalla/6, null);
+        c.drawBitmap(bitmapEnergia, anchoPantalla - anchoPantalla/10 * 3, altoPantalla - altoPantalla/6, null);
+        c.drawBitmap(bitmapVolver, 0, 0, null);
+
+        c.drawText("" + trabajadores.numero, anchoPantalla/10 * 2, altoPantalla - altoPantalla/6, pincelTxt);
+        c.drawText(trabajadores.energia + "%", anchoPantalla - anchoPantalla/10 * 2, altoPantalla - altoPantalla/6, pincelTxt);
+        c.drawText(trabajadores.salud + "%", anchoPantalla/10 * 5, altoPantalla - altoPantalla/6, pincelTxt);
+        c.drawText("" + rellenarEnergia, btnSubirEnergia.centerX(),btnSubirEnergia.centerY(), pincelTxt);
         super.dibujar(c);
     }
 
@@ -63,13 +76,21 @@ public class EscenaTrabajadores extends Escenas {
         if(btnVolver.contains(x, y)) {
             return 1;
         }//end if
-        if(btnMas.contains(x, y)) {
-            trabajadores.salario += 100;
-            editor.putInt("salarioTbj", trabajadores.salario).commit();
-        }//end if
-        if(btnMenos.contains(x, y)) {
-            trabajadores.salario -= 100;
-            editor.putInt("salarioTbj", trabajadores.salario).commit();
+
+        if(btnSubirEnergia.contains(x, y)){
+            if(money >= rellenarEnergia){
+                trabajadores.energia += 10;
+                money -= rellenarEnergia;
+                if(trabajadores.energia > 100){
+                    trabajadores.energia = 100;
+                }//end if
+                rellenarEnergia *= 3;
+                editor.putInt("rellenarEnergia", rellenarEnergia);
+                editor.putInt("energiaTrabajadores", trabajadores.energia);
+                editor.putInt("money", money);
+            }//end if
+
+
         }//end if
         return numEscena;
     }//end onTouchEvent

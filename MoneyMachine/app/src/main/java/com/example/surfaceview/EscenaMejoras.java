@@ -82,7 +82,7 @@ public class EscenaMejoras extends Escenas {
         pincelRec.setColor(Color.BLACK);
         pincelRec.setStyle(Paint.Style.STROKE);
         pincelRec.setStrokeWidth(20);
-        //c.drawRect(btnVolver, pincelRec);
+
         c.drawRect(mejoraPulsación, pincelRec);
         c.drawRect(mejoraAutoclick, pincelRec);
         c.drawRect(mejoraTiempoAutoClick, pincelRec);
@@ -137,6 +137,8 @@ public class EscenaMejoras extends Escenas {
             }//end if
         }//end if
 
+        //Limitar cuanto se puede bajar el tiempo, ya que puede llegar a petar
+        //(Por ejemplo, maximo nivel que el autoclick lo haga cada medio segundo)
         if(mejoraTiempoAutoClick.contains(x, y)){
             if(money >= costoTiempoAutoclick) {
                 tiempoAutoclick -= 500;
