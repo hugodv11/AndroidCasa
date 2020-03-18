@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.Image;
+import android.util.Log;
 
 //Clase que se utilizará para crear ventanas emergentes en la app
 public class pantallaAvisos {
@@ -20,6 +21,7 @@ public class pantallaAvisos {
     private Bitmap bitmapFondo, aux;
     private Rect cuadro;
     public Rect btnAceptar, btnCancelar;
+    private String[] textos;
 
 
     public pantallaAvisos(int altoPantalla, int anchoPantalla, String texto, Context context, Paint pincelFondo, Paint pincelCuadro, Paint pincelTexto) {
@@ -30,9 +32,11 @@ public class pantallaAvisos {
         this.pincelFondo = pincelFondo;
         this.pincelCuadro = pincelCuadro;
         this.pincelTexto = pincelTexto;
-        btnAceptar = new Rect(anchoPantalla/2 - 300, altoPantalla/2 + 150, anchoPantalla/2, altoPantalla/2 + 300);
-        btnCancelar = new Rect(anchoPantalla/2, altoPantalla/2 + 150, anchoPantalla/2 + 300, altoPantalla/2 + 300);
+        cuadro = new Rect(anchoPantalla/6, altoPantalla/3, anchoPantalla - anchoPantalla/6, altoPantalla/3 * 2);
+        btnAceptar = new Rect(anchoPantalla/6, (altoPantalla/3 * 2) - altoPantalla/15, anchoPantalla/6 * 3, altoPantalla/3 * 2);
+        btnCancelar = new Rect(anchoPantalla/6 * 3, (altoPantalla/3 * 2) - altoPantalla/15, anchoPantalla - anchoPantalla/6, altoPantalla/3 * 2);
     }//end constructor
+
 
     public int getAltoPantalla() {
         return altoPantalla;
@@ -54,9 +58,7 @@ public class pantallaAvisos {
         return texto;
     }
 
-    public void setTexto(String texto) {
-        this.texto = texto;
-    }
+    public void setTexto(String texto) { this.texto = texto; }
 
     public Context getContext() {
         return context;
@@ -104,14 +106,12 @@ public class pantallaAvisos {
     //entran mas o menos cuando cambie la fuente, y añadire un salto de linea y pa diante)
     //Todos los colores se pueden cambiar con los pinceles
 
-
     //METODOS
-
     //Metodo que dibuja un cuadro de dialogo informativo, sin botones y sin ser interactuable
     public void cuadroEstandar(Canvas c){
         aux = BitmapFactory.decodeResource(context.getResources(), R.drawable.mejoras);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
-        cuadro = new Rect(anchoPantalla/2 - 300, altoPantalla/2 - 300, anchoPantalla/2 + 300, altoPantalla/2 + 300);
+
         //Zona de dibujado
         c.drawBitmap(bitmapFondo, 0, 0, pincelFondo);
         c.drawRect(cuadro, pincelCuadro);
@@ -119,18 +119,20 @@ public class pantallaAvisos {
     }//end method cuadroEstandar
 
 
-
+    //Metodo que dibuja un cuadro de dialogo informativo, con botones e interactuable
     public void cuadroBotones(Canvas c){
         aux = BitmapFactory.decodeResource(context.getResources(), R.drawable.mejoras);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
-        cuadro = new Rect(anchoPantalla/2 - 300, altoPantalla/2 - 300, anchoPantalla/2 + 300, altoPantalla/2 + 300);
-
-
-
+        this.textos = texto.split("\\.");
         //Zona de dibujado
         c.drawBitmap(bitmapFondo, 0, 0, pincelFondo);
         c.drawRect(cuadro, pincelCuadro);
-        c.drawText(texto, anchoPantalla/2, altoPantalla/2, pincelTexto);
+        int posY = altoPantalla / 3 ;
+        for(int i = 0; i < textos.length; i++) {
+            posY += altoPantalla/20;
+            c.drawText(textos[i], cuadro.centerX(), posY , pincelTexto);
+        }//end for
+        //Botones
         pincelCuadro.setColor(Color.RED);
         c.drawRect(btnAceptar, pincelCuadro);
         c.drawRect(btnCancelar, pincelCuadro);
@@ -142,9 +144,6 @@ public class pantallaAvisos {
         c.drawText("Cancelar", cancelCenterX, cancelCenterY, pincelTexto);
 
     }//end method cuadroBotones
-
-
-
 
 
 }//end class PantallaAvisos

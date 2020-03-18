@@ -20,6 +20,7 @@ import android.view.SurfaceHolder;
 
 import androidx.core.view.GestureDetectorCompat;
 
+
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,6 +86,10 @@ public class Escenas {
     //Tiempo actual
     Date currentTime;
 
+    //flags de los eventos
+    boolean flag1;
+
+
 
 
     //CONSTRUCTOR
@@ -124,6 +129,17 @@ public class Escenas {
         currentTime = Calendar.getInstance().getTime();
 
 
+        cuadroConBotones = new pantallaAvisos(altoPantalla,anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
+        cuadroAviso = new pantallaAvisos(altoPantalla,anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
+
+
+
+
+
+
+
+
+
         //Utilizamos el shared Preference para darle valor a las variables
         //Utilizo los valores por defecto por si es la primera vez que se juega o por si
         //se han borrado los datos
@@ -141,25 +157,27 @@ public class Escenas {
         //Valores de la clase Trabajadores
         trabajadores.numero = preferences.getInt("numeroTrabajadores", 5);
         trabajadores.energia = preferences.getInt("energiaTrabajadores", 100);
-        trabajadores.salud = preferences.getInt("saludTrabajadores", 100);
+        trabajadores.salud = preferences.getInt("saludTrabajadores", 50);
         trabajadores.salario = preferences.getInt("salarioTbj", 1500);
         trabajadores.dineroBase = preferences.getInt("dineroBase", 100);
         trabajadores.eficiencia = preferences.getInt("eficienciaTbj", 5);
         trabajadores.tiempo = preferences.getInt("tiempoTbj", 240);
         trabajadores.costeEnergia = preferences.getInt("costeEnergiaTbj", 1);
-
         //Tiempo de la ultima conexión, si no hay una guardada se guarda la actual
         horaAn = preferences.getInt("horaAn", currentTime.getHours());
         minutosAn = preferences.getInt("minutosAn", currentTime.getMinutes());
         //Dinero que se gana offline
         moneyOffline = preferences.getInt("moneyOffline", 0);
 
+        //Avisos
+        flag1 = preferences.getBoolean("flag1", true);
+
+
         //detector de gestos
         detectorDeGestos = new GestureDetectorCompat(context, new DetectorDeGestos());
 
 
-        Log.i("tiempo", "Ultima hora de sesión : " + horaAn + " : " + minutosAn);
-        Log.i("tiempo", "Sesión actual : " + currentTime.getHours() + " : " + currentTime.getMinutes());
+
 
     }//end constructor
 

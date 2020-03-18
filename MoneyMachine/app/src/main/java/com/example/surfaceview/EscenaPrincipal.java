@@ -6,12 +6,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.AudioManager;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
+
+
 
 import java.util.Random;
 import java.util.Timer;
@@ -29,7 +29,9 @@ public class EscenaPrincipal extends Escenas {
     long tempTiempo=0;
     int imagenBoton;
 
-    boolean pulsadoBoton;
+    boolean pulsadoBoton, hayAviso, respuesta;
+    int numAviso;
+
 
     public int getImagenBoton() {
         return imagenBoton;
@@ -41,7 +43,6 @@ public class EscenaPrincipal extends Escenas {
             bitmapBtn = aux.createScaledBitmap(aux, pulsador.width(), pulsador.height(), true);
             this.imagenBoton = imagenBoton;
         }//end if
-
     }//end set
 
 
@@ -51,7 +52,6 @@ public class EscenaPrincipal extends Escenas {
 
 
 
-    avisos aviso;
 
     //Control de la musica
     public MediaPlayer mediaPlayer;
@@ -104,11 +104,11 @@ public class EscenaPrincipal extends Escenas {
         mediaPlayer.start();
 
         pulsadoBoton = false;
+        hayAviso = false;
+        respuesta = false;
         moverNumero = false;
 
-        cuadroConBotones = new pantallaAvisos(altoPantalla,anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
-        cuadroAviso = new pantallaAvisos(altoPantalla,anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
-        aviso = new avisos(cuadroAviso, cuadroConBotones);
+
 
     }//end constructor
 
@@ -142,11 +142,11 @@ public class EscenaPrincipal extends Escenas {
 
 
 
-            if(aviso.isRespuesta()){
+            if(respuesta){
                 cuadroAviso.cuadroEstandar(c);
             }//end if
             else{
-                if(aviso.isHayAviso()){
+                if(hayAviso){
                     cuadroConBotones.cuadroBotones(c);
                 }//end if
             }//end else
@@ -189,26 +189,29 @@ public class EscenaPrincipal extends Escenas {
 
         comprobar();
 
-        if(aviso.isHayAviso()) {
+        if(hayAviso) {
             if(cuadroConBotones.btnAceptar.contains(x, y)){
-                cuadroAviso.setTexto(aviso.respuesta(true));
-                aviso.setRespuesta(true);
-                aviso.setHayAviso(false);
+                cuadroAviso.setTexto(respuesta(true));
+                respuesta = true;
+                hayAviso = false;
             }//end if
             if(cuadroConBotones.btnCancelar.contains(x, y)){
-                cuadroAviso.setTexto(aviso.respuesta(false));
-                aviso.setRespuesta(true);
-                aviso.setHayAviso(false);
+                cuadroAviso.setTexto(respuesta(false));
+                respuesta = true;
+                hayAviso = false;
             }//end if
             return numEscena;
         }//end if
         else {
-            aviso.setRespuesta(false);
+            respuesta = false;
+
             if (btnOpciones.contains(x, y)) {
                 timer.cancel();
                 timer.purge();
+
                 return 4;
             }//end if
+
             if (pulsador.contains(x, y)) {
                 money += dineroPulsacion;
                 editor.putInt("money", money).commit();
@@ -226,19 +229,14 @@ public class EscenaPrincipal extends Escenas {
                  */
                 //Si pulsamos dentro del boton cambiamos su sprite
                 pulsadoBoton = true;
-
-
-
                 return numEscena;
             }//end if
             if (btnMejora.contains(x, y)) {
                 timer.cancel();
                 timer.purge();
+                //Despues de utilizar el objeto aviso lo guardamos
                 return 2;
             }//end if
-
-
-
         }//end else
 
         //Cuando se toca la pantalla se cierra el cuadro de dialogo
@@ -247,34 +245,48 @@ public class EscenaPrincipal extends Escenas {
             trabajadores.mensajeBeneficios = false;
         }//end if
 
-
         return numEscena;
    }//end onTouchEvent
 
 
 
-    //Vale, en le objeto avisos guardas una flag por cada posible evento, las inicias a true
-    //y las pones a false una vez que salte ese evento, y para no joder las cosas cada vez que
-    //cambias de pantalla, lo que haces es guardar el objeto avisos en el shared Preference y
-    //magia colgado, tambien pense llamar al metodo comprobar en vez de en el onTouchEvent, en un timer
-    //creado especificamente para los eventos y los logros(porque los logros funcionan practicamente igual
-    //que los eventos)
+
+
+    //Comprueba si se han cumplido los ifs de algunos eventos
     public void comprobar(){
         //Comprobar aqui que texto devolver
-
-        if(money == 50) {
-            String text = "Tus trabajadores están hambrientos.\n" +
-                    "¿Que tal si organizas una cena para\n" +
+        if(money >= 50 && flag1) {
+            String text = "Tus trabajadores están hambrientos." +
+                    "¿Que tal si organizas una cena para." +
                     "toda la plantilla?";
 
             cuadroConBotones.setTexto(text);
-            aviso.setNumAviso(1);
-            aviso.setHayAviso(true);
+            numAviso = 1;
+            hayAviso = true;
+            flag1 = false;
+            editor.putBoolean("flag1", false).commit();
         }//end if
-
     }//end method probar
 
 
+
+    public String respuesta(boolean caso){
+        switch (numAviso){
+            case 1:
+                if(caso){
+                    trabajadores.salud += 5;
+                    editor.putInt("saludTrabajadores", trabajadores.salud).commit();
+                    return "Tus trabajadores estan más contentos!!!";
+                }//end if
+                else{
+                    trabajadores.salud -= 5;
+                    editor.putInt("saludTrabajadores", trabajadores.salud).commit();
+                    return "Tus trabajadores se desaniman un poco!!!";
+                }//end else
+            default:
+                return "Locooo";
+        }//end switch
+    }//end method respuesta
 
 
 
