@@ -172,7 +172,6 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
                     if(c != null) {
                         synchronized (surfaceHolder) { //La sincronización es necesario por ser recurso común
                             if (escenaActual != null) {
-                                escenaActual.actualizarFisica();
                                 escenaActual.dibujar(c);
                                 if(escenaActual instanceof EscenaOpciones){
                                     MediaPlayer newmediaPlayer = ((EscenaOpciones) escenaActual).cambiarSonido(mediaPlayer);

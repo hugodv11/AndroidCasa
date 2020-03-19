@@ -14,6 +14,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import androidx.core.view.GestureDetectorCompat;
 
@@ -26,15 +27,15 @@ import java.util.Locale;
 
 import javax.security.auth.login.LoginException;
 
-
+/**
+ * Escena padre que se encarga de cargar todos los recursos necesarios para las demas escenas
+ */
 public class Escenas {
     //ATRIBUTOS PARA LAS ESCENAS
-
     int numEscena;
     Context context;
     int altoPantalla, anchoPantalla;
-
-    //Pinceles//Cambiar a una clase
+    //Pinceles
     Paint pincelTxt = new Paint();
     //Sirve para cambiar la fuente
     Typeface faw;
@@ -44,64 +45,52 @@ public class Escenas {
     Paint pincelFondo = new Paint();
     Paint pincelCuadro = new Paint();
     Paint pincelTexto = new Paint();
-
     //Variable para controlar el vibrador
     Vibrator vibrator;
-
     //Variables para el control de sonido
     //Efectos de sonido
     public AudioManager audioManager;
     public SoundPool efectos;
     public int sonidoCoin;
     public int maxSonidosSimultaneos = 10;
-
-
-
     //Control de gestos
     public GestureDetectorCompat detectorDeGestos;
-
     //Bitmap que se una para dibujar los fondos, la clase que lo hereda lo define;
     Bitmap bitmapFondo;
-
     //Bitmap auxiliar que utilizamos para luego rescalar la imagen al tamaño de la pantalla
     Bitmap aux;
-
     //Objetos de la clase pantallaAviso para generar cuadros de dialogo
     pantallaAvisos avisoDineroOffline, cuadroConBotones, cuadroAviso;
-
-
     //Variables con los valores que rescatamos del shared preference
     int money, dineroPulsacion, autoclick, tiempoAutoclick, moneyOffline;
     int costoMejoraPulsacion, costoMejoraAutoclick, costoTiempoAutoclick;
     int rellenarEnergia;
-
+    //Variables utilizadas para el calculo de tiempo fuera de la app
     int horaAn, minutosAn, diffTiempo, diffMin;
-
     //Objeto de tipo trabajadores
     Trabajadores trabajadores = new Trabajadores();
-
     //Se utiliza para la consistencia de datos
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
-
     //Tiempo actual
     Date currentTime;
-
     //flags de los eventos
     boolean flag1, flag2, flag3, flag4;
-
     //Idiomas
     boolean ingles;
 
-
-    //CONSTRUCTOR
+    /**
+     * Constructor de la clase
+     * @param numEscena numero de escena actual
+     * @param context contexto de la aplicación
+     * @param altoPantalla alto de la pantalla del dispositivo
+     * @param anchoPantalla ancho de la pantalla del dispositivo
+     */
     public Escenas(int numEscena, Context context, int altoPantalla, int anchoPantalla) {
         this.numEscena = numEscena;
         this.context = context;
         this.altoPantalla = altoPantalla;
         this.anchoPantalla = anchoPantalla;
-
-
         audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         if((android.os.Build.VERSION.SDK_INT) >= 21){
             SoundPool.Builder spb=new SoundPool.Builder();
@@ -114,23 +103,12 @@ public class Escenas {
             this.efectos = new SoundPool(maxSonidosSimultaneos, AudioManager.STREAM_MUSIC, 0);
         }//end else
         sonidoCoin = efectos.load(context, R.raw.coin,1);
-
-
-        //USAR SHARED PREFERENCES PARA LA CONSISTENCIA DE DATOS
-        //Estoy pensado que como getSharedPreferences te deja tener mas de un archivo
-        //Separar datos que si se pueden borrar para empezar pero otros guardarlos como los logros
-        //y cosas asi.
+        //SHARED PREFERENCES PARA LA CONSISTENCIA DE DATOS
         preferences = context.getSharedPreferences("Mis datos", Context.MODE_PRIVATE);
         //Objecto de edición del shared preference
         editor = preferences.edit();
-
-        //Tiempo actual, para hacer toda la parte de las mejoras offline
-        //(Gethour y asi está deprecated, y la otra opción que encontre no la soporta
-        //la api para la que estoy haciendo la appp
-        //Investiga lo de la api y toda esa puta basura
+        //Tiempo actual
         currentTime = Calendar.getInstance().getTime();
-
-
         cuadroConBotones = new pantallaAvisos(altoPantalla,anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
         cuadroAviso = new pantallaAvisos(altoPantalla,anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
         //Utilizamos el shared Preference para darle valor a las variables
@@ -138,7 +116,6 @@ public class Escenas {
         //se han borrado los datos
         //Este ciclo lo repite en el constructor, por lo tanto se hace cada vez que se
         //cambia de escena conservando así todos los cambios entre ellas
-        //Cambiar todo este codigo a un metodo o una clase
         money = preferences.getInt("money", 0);
         dineroPulsacion = preferences.getInt("dineroPulsacion", 1);
         autoclick = preferences.getInt("autoclick", 0);
@@ -147,7 +124,6 @@ public class Escenas {
         costoMejoraAutoclick = preferences.getInt("costoMejoraAutoclick", 70);
         costoTiempoAutoclick = preferences.getInt("costoTiempoAutoClick", 600);
         rellenarEnergia = preferences.getInt("rellenarEnergia", 1000);
-
         //Valores de la clase Trabajadores
         trabajadores.numero = preferences.getInt("numeroTrabajadores", 1);
         trabajadores.energia = preferences.getInt("energiaTrabajadores", 100);
@@ -158,35 +134,35 @@ public class Escenas {
         trabajadores.tiempo = preferences.getInt("tiempoTbj", 240);
         trabajadores.costeEnergia = preferences.getInt("costeEnergiaTbj", 1);
         //Tiempo de la ultima conexión, si no hay una guardada se guarda la actual
+        //PUNTO DE DEPURACIÓN//
+        //Cuando se instala por primera vez los valores son erroneos, no corre la hora actual
+        //y los minutos sino otra totalmente diferente
         horaAn = preferences.getInt("horaAn", currentTime.getHours());
         minutosAn = preferences.getInt("minutosAn", currentTime.getMinutes());
+
         //Dinero que se gana offline
         moneyOffline = preferences.getInt("moneyOffline", 0);
-
         //Avisos
         flag1 = preferences.getBoolean("flag1", true);
         flag2 = preferences.getBoolean("flag2", true);
         flag3 = preferences.getBoolean("flag3", true);
         flag4 = preferences.getBoolean("flag4", true);
-
         ingles = preferences.getBoolean("ingles", false);
         if(ingles){
             setAppLocale("en");
         }else {
             setAppLocale("es_ES");
         }//end else
-
-
         //Vibrador
          vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         //detector de gestos
         detectorDeGestos = new GestureDetectorCompat(context, new DetectorDeGestos());
-
-
-
     }//end constructor
 
-
+    /**
+     * Sirve para cambiar la localidad del dispositivo
+     * @param localCode codigo que indica a que región se quiere cambiar
+     */
     public void setAppLocale(String localCode){
         Resources res = context.getResources();
         DisplayMetrics ds = res.getDisplayMetrics();
@@ -197,7 +173,6 @@ public class Escenas {
 
     /**
      * Metodo que se utiliza para dibujar en el canvas.
-     *
      * @param c  Canvas en el que se va a dibujar
      */
     public void dibujar(Canvas c){
@@ -216,16 +191,10 @@ public class Escenas {
         catch(Exception e){
             e.printStackTrace();
         }//end catch
+
     }//end method dibujar
-
-
-    //Metodo que se llama en el momento antes de la destrucción de la
-    //superficie de dibujo para guardar datos en el shared preference
-    //Tambien se utilizara en un botón del menú de opciones para guardar cada vez que el usuario
-    //quiera
-
     /**
-     *
+     *Se llama antes de la destrucción de la superficie de dibujo y sirve para guardar datos
      */
     public void guardarDatos(){
 
@@ -234,16 +203,13 @@ public class Escenas {
         editor.commit();
     }//end method guardarDatos
 
-
     /**
      * Calcula la diferencia de tiempo entre la ultima hora de
      * conexión y la actual y guarda ese valor en la variable
      * diffTiempo.
-     *
      * diffTiempo se mide en minutos.
      */
     public void controlTemporal(){
-
         diffTiempo = currentTime.getHours() - horaAn;
         //si difftiempo = 0 significa que no a pasado una hora, por lo tanto los minutos se tienen que calcular
         //de forma diferente
@@ -266,7 +232,7 @@ public class Escenas {
                     //por el contrario se le suma ya que han pasado las horas justas mas algunos minutos
                     //tambien lo utilizamos si es 0
                     diffTiempo += diffMin;
-                                    }//end else
+                    }//end else
             }//end if
             //si despues de calcular la diferencia de tiempo el valor es negativo significa que han pasado
             //24h o mas
@@ -276,33 +242,25 @@ public class Escenas {
         }//end else
     }//end method control temporal
 
-
-
-    //Metodo que calcula los beneficios que se generan de forma offline
-    //CUando el jugador empieza de 0, falla, creo que pasa cuando lo instala
-    //Echale un ojo
+    /**
+     * Calcula los beneficioas que se generan  de forma offline
+     */
     public void calcularDatos(){
-
         //primero calculamos el dinero que generan cada trabajador
         //Esto dependera de la salud de los trabajadores
         trabajadores.gananciasTrabajador();
-
         //Antes de hacer ningun cambio o calculo mas, calculamos cuantos ciclos son capaces de hacer
         //los trabajadores antes de que se les acabe la energia
         trabajadores.ciclosDisponibles(diffTiempo);
-
         //despues de calcular cuanto gana cada trabajador y cada cuanto ya podemos sumar el dinero
         //ganado a la variable money
         //Tenemos que tener en cuenta la diferencia entre los ciclos disponibles y los completados
-
         money += trabajadores.dineroCiclo * trabajadores.ciclosCompletados;
         moneyOffline = trabajadores.dineroCiclo * trabajadores.ciclosCompletados;
         trabajadores.energia -= trabajadores.ciclosCompletados * trabajadores.costeEnergia;
-
         if(moneyOffline > 0){
             trabajadores.mensajeBeneficios = true;
         }//end if
-
         //Actualización de los datos en el shared preference
         editor.putInt("energiaTrabajadores", trabajadores.energia);
         editor.putInt("money", money);
@@ -310,17 +268,12 @@ public class Escenas {
         editor.commit();
     }//end method calcular Datos
 
-
-
-    public void actualizarFisica(){
-    }
-
-
-
-
-
+    /**
+     * Metodo que se lanza cuando se produce una pulsación en la pantalla
+     * @param event evento de la pulsación
+     * @return devuelve el número de escena que se debe dibujar
+     */
     public int  onTouchEvent(MotionEvent event){
         return numEscena;
     }//end onTouchEvent
-
 }//end class Escenas

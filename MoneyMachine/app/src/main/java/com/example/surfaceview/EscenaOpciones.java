@@ -20,6 +20,9 @@ import java.util.Locale;
 
 import javax.security.auth.login.LoginException;
 
+/**
+ * Clase que se encarga de dibujar la pantalla de opciones
+ */
 public class EscenaOpciones extends Escenas {
 
     Rect btnVolver, btnBorrarDatos, btnCreditos, btnIdioma, btnMutear;
@@ -30,6 +33,14 @@ public class EscenaOpciones extends Escenas {
 
     MediaPlayer mediaPlayer;
 
+    /**
+     * Constructor de la clase
+     * @param numEscena numero de escena actual
+     * @param context contexto de la applicación
+     * @param altoPantalla alto de la pantalla del dispositivo
+     * @param anchoPantalla ancho de la pantalla del dispositivo
+     * @param mediaPlayer objeto que manipula la musica del juego
+     */
     public EscenaOpciones(int numEscena, Context context, int altoPantalla, int anchoPantalla, MediaPlayer mediaPlayer) {
         super(numEscena, context, altoPantalla, anchoPantalla);
         this.mediaPlayer = mediaPlayer;
@@ -58,6 +69,10 @@ public class EscenaOpciones extends Escenas {
         muted = false;
     }//end constructor
 
+    /**
+     * Metodo que se encarga de dibuja en el canvas
+     * @param c  Canvas en el que se va a dibujar
+     */
     @Override
     public void dibujar(Canvas c) {
         super.dibujar(c);
@@ -67,8 +82,6 @@ public class EscenaOpciones extends Escenas {
         c.drawBitmap(bitmapBtnCreditos, 0, 0, null);
         c.drawBitmap(bitmapVolver, anchoPantalla - btnVolver.width(), 0,null);
         c.drawBitmap(bitmapBorrar, anchoPantalla/10, altoPantalla - altoPantalla/6, null);
-
-
         if(ingles){
             aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.espanhol);
             bitmapBandera = aux.createScaledBitmap(aux, btnIdioma.width(), btnIdioma.height(),true);
@@ -83,13 +96,16 @@ public class EscenaOpciones extends Escenas {
         }//end else
         c.drawBitmap(bitmapBandera,anchoPantalla/10 * 4, altoPantalla - altoPantalla/6, null);
         c.drawText(context.getResources().getString(R.string.creditos), btnCreditos.centerX(), btnCreditos.centerY(), pincelTxt);
-
         if(creditos){
             c.drawBitmap(bitmapCreditos, 0 ,0, null);
         }//end if
     }//end dibujar
 
-
+    /**
+     * Metodo que se lanza cuando se produce una pulsación en la pantalla
+     * @param event evento de la pulsación
+     * @return devuelve el número de escena que se debe dibujar
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
@@ -117,7 +133,6 @@ public class EscenaOpciones extends Escenas {
             }//end else
             editor.putBoolean("ingles", ingles).commit();
         }//end if
-
         if(btnMutear.contains(x, 7)){
             if(muted){
                 muted = false;
@@ -126,11 +141,15 @@ public class EscenaOpciones extends Escenas {
                 muted = true;
             }//end else
         }//end if
-
         return numEscena;
     }//end onTouchEvent
 
 
+    /**
+     * Metodo que silencia la musica o, en el caso contrario, le da volumen
+     * @param mediaPlayer objecto que modifica la musica del juego
+     * @return devuelve el objecto mediaPlayer
+     */
     public MediaPlayer cambiarSonido(MediaPlayer mediaPlayer){
         if(muted){
             mediaPlayer.setVolume(0,0);

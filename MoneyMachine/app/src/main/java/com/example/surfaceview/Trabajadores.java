@@ -1,5 +1,9 @@
 package com.example.surfaceview;
 
+/**
+ * Clase que engloba todos los atributos de los trabajadores
+ * Contiene métodos con operaciones lógicas para calcular varios datos
+ */
 public class Trabajadores {
     //eficienciatbj es la variable que nos marca cada cuantos minutos nuestros trabajadores
     //ganan dinero(Completan un ciclo), empezara siendo cada hora, y cuanto mas lo mejores mas ira disminuyendo
@@ -11,7 +15,9 @@ public class Trabajadores {
     int ciclosDisponibles, ciclosCompletados, dineroCiclo;
     boolean mensajeBeneficios;
 
-
+    /**
+     * Constructor de la clase
+     */
     public Trabajadores() {
         ciclosCompletados = 0;
         ciclosDisponibles = 0;
@@ -21,10 +27,9 @@ public class Trabajadores {
         mensajeBeneficios = false;
     }//end constructor
 
-
-
-    //Metodo que calcula, dependiendo de un valor base y de la salud de los trabajadores,
-    //cuando dinero genera un empleado en cada ciclo
+    /**
+     * Calcula, dependiendo del valor base y de la salud de los trabajadores, cuanto dinero genera un empleado cada ciclo
+     */
     public void gananciasTrabajador(){
         if(salud == 100){
             ganancias = dineroBase * 2;
@@ -42,10 +47,10 @@ public class Trabajadores {
         dineroCiclo = ganancias * numero;
     }//end method gananciasTrabajador
 
-
-
-    //Metodo que calcula cuantos ciclos han completado los trabajadores y cuantos ciclos
-    //pueden hacer
+    /**
+     * Calcula cuantos ciclos han completado los trabajaodres y cuantos ciclos
+     * @param diffTiempo diferencia de tiempo entre la ultima hora de conexión y la anterior
+     */
     public void ciclosDisponibles(int diffTiempo){
         ciclosDisponibles = energia / costeEnergia;
         //Si tenemos como minimo un ciclo disponible procedemos con los calculos
@@ -65,8 +70,5 @@ public class Trabajadores {
             }//end if
         }//end if
     }//end method ciclosDisponibles
-
-
-
 
 }//end class trabajadores

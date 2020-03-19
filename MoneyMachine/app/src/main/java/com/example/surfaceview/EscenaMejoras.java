@@ -14,6 +14,9 @@ import android.view.SurfaceHolder;
 
 import java.util.HashMap;
 
+/**
+ * Clase que se encarga de dibujar la escena de mejoras
+ */
 public class EscenaMejoras extends Escenas {
 
     Rect btnVolver, mejoraPulsación, mejoraAutoclick, mejoraTiempoAutoClick, btnAyuda;
@@ -21,14 +24,18 @@ public class EscenaMejoras extends Escenas {
     int separacion;
     boolean ayuda;
 
-    //Constructor
+    /**
+     * Constructor de la clase
+     * @param numEscena numero de escena actual
+     * @param context contexto de la aplicación
+     * @param altoPantalla alto de la pantalla del dispositivo
+     * @param anchoPantalla ancho de la pantalla del dispositivo
+     */
     public EscenaMejoras(int numEscena, Context context, int altoPantalla, int anchoPantalla) {
         super(numEscena, context, altoPantalla, anchoPantalla);
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.mejoras);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
-
         separacion = altoPantalla / 20;
-
         //Botones
         btnVolver = new Rect(0, 0, anchoPantalla/9,anchoPantalla/9);
         mejoraPulsación = new Rect(anchoPantalla/20, altoPantalla/10, anchoPantalla - anchoPantalla / 20    , (altoPantalla/10) * 2);
@@ -38,22 +45,21 @@ public class EscenaMejoras extends Escenas {
         //Bitmaps
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.dollar);
         bitmapPulsacion = aux.createScaledBitmap(aux,mejoraPulsación.width()/4 , mejoraPulsación.height() - (mejoraPulsación.height() / 9),true);
-
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.autoclick);
         bitmapAutoclick = aux.createScaledBitmap(aux,mejoraAutoclick.width()/4 , mejoraAutoclick.height() - (mejoraAutoclick.height() / 9),true);
-
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.tiempo);
         bitmapCosteAutoClick = aux.createScaledBitmap(aux,mejoraTiempoAutoClick.width()/4 , mejoraTiempoAutoClick.height() - (mejoraTiempoAutoClick.height() / 9),true);
-
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.izquierda);
         bitmapVolver = aux.createScaledBitmap(aux, btnVolver.width(),btnVolver.height(),true);
-
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayuda);
         bitmapBtnAyuda = aux.createScaledBitmap(aux, btnAyuda.width(), btnAyuda.height(), true);
-
         ayuda = false;
     }//end constructor
 
+    /**
+     * Metodo que se utiliza para dibujar en el canvas.
+     * @param c  Canvas en el que se va a dibujar
+     */
     @Override
     public void dibujar(Canvas c) {
         //Aqui dibujamos
@@ -61,7 +67,6 @@ public class EscenaMejoras extends Escenas {
         pincelRec.setColor(Color.BLACK);
         pincelRec.setStyle(Paint.Style.STROKE);
         pincelRec.setStrokeWidth(20);
-
         c.drawRect(mejoraPulsación, pincelRec);
         c.drawRect(mejoraAutoclick, pincelRec);
         c.drawRect(mejoraTiempoAutoClick, pincelRec);
@@ -76,7 +81,6 @@ public class EscenaMejoras extends Escenas {
         c.drawText(s + " " + costoMejoraPulsacion, mejoraPulsación.centerX() + anchoPantalla / 8, mejoraPulsación.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
         c.drawText(s + " " + costoMejoraAutoclick, mejoraAutoclick.centerX() + anchoPantalla / 8, mejoraAutoclick.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
         c.drawText(s + " " + costoTiempoAutoclick, mejoraTiempoAutoClick.centerX() + anchoPantalla / 8, mejoraTiempoAutoClick.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
-
         if(!ingles){
             aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayudamejoras);
             bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
@@ -91,12 +95,11 @@ public class EscenaMejoras extends Escenas {
         super.dibujar(c);
     }//end dibujar
 
-    @Override
-    public void actualizarFisica() {
-        super.actualizarFisica();
-    }
-
-
+    /**
+     * Metodo que se lanza cuando se produce una pulsación en la pantalla
+     * @param event evento de la pulsación
+     * @return devuelve el número de escena que se debe dibujar
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
@@ -104,14 +107,12 @@ public class EscenaMejoras extends Escenas {
         if(btnVolver.contains(x, y)) {
             return 1;
         }//end if
-
         if(btnAyuda.contains(x, y)){
             ayuda = true;
         }//end if
         else {
             ayuda = false;
         }//end else
-
         if(mejoraPulsación.contains(x, y)) {
             if(money >= costoMejoraPulsacion){
                 dineroPulsacion += 7;
@@ -123,7 +124,6 @@ public class EscenaMejoras extends Escenas {
                 editor.commit();
             }//end if
         }//end if
-
         if(mejoraAutoclick.contains(x, y)) {
             if(money >= costoMejoraAutoclick){
                 autoclick += 6;
@@ -136,7 +136,6 @@ public class EscenaMejoras extends Escenas {
                 editor.commit();
             }//end if
         }//end if
-
         if(mejoraTiempoAutoClick.contains(x, y)){
             if(money >= costoTiempoAutoclick) {
                 tiempoAutoclick -= 250;
@@ -151,12 +150,6 @@ public class EscenaMejoras extends Escenas {
                 editor.commit();
             }//end if
         }//end if
-
         return numEscena;
     }//end onTouchEvent
-
-
-
-
-
 }//end class EscenaMejoras

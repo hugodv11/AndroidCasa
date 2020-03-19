@@ -24,7 +24,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-
+/**
+ * Clase que se encarga de dibujar la pantalla principal
+ * Es la que se dibuja por defecto
+ */
 public class EscenaPrincipal extends Escenas {
 
     Rect pulsador, btnMejora, btnOpciones;
@@ -42,11 +45,18 @@ public class EscenaPrincipal extends Escenas {
     boolean pulsadoBoton, hayAviso, respuesta;
     int numAviso;
 
-
+    /**
+     * get de la propiedad ImagenBoton
+     * @return devuelve la imagen del boton
+     */
     public int getImagenBoton() {
         return imagenBoton;
     }
 
+    /**
+     * set de la propiedad imagenBoton
+     * @param imagenBoton int que representa una imagen
+     */
     public void setImagenBoton(int imagenBoton) {
         if(pulsadoBoton) {
             aux = BitmapFactory.decodeResource(context.getResources(), imagenBoton);
@@ -64,6 +74,13 @@ public class EscenaPrincipal extends Escenas {
     Bitmap bitmapOpciones, bitmapMejoras, bitmapBtn;
 
 
+    /**
+     * Constructor de la clase
+     * @param numEscena numero de escena actual
+     * @param context contexto de la applicación
+     * @param altoPantalla alto de la pantalla del dispositivo
+     * @param anchoPantalla ancho de la pantalla del dispositivo
+     */
     public EscenaPrincipal(int numEscena, Context context, int altoPantalla, int anchoPantalla, int imagen) {
         super(numEscena, context, altoPantalla, anchoPantalla);
         this.imagenBoton = imagen;
@@ -87,8 +104,6 @@ public class EscenaPrincipal extends Escenas {
         //Imagen del botón de la mitad de la pantalla
         aux = BitmapFactory.decodeResource(context.getResources(), imagenBoton);
         bitmapBtn = aux.createScaledBitmap(aux, pulsador.width(), pulsador.height(), true);
-
-
         //Timer del autoclick
         TimerTask timerTask = new TimerTask() {
             //Dentro de run es donde se pone todo el codigo
@@ -101,7 +116,6 @@ public class EscenaPrincipal extends Escenas {
         timer = new Timer();
         // Dentro de 0 milisegundos avísame cada 2000 milisegundos
         timer.scheduleAtFixedRate(timerTask, 0, tiempoAutoclick);
-
         //Variables para el uso del acelerómetro
         shake = false;
         oneTime = false;
@@ -134,20 +148,18 @@ public class EscenaPrincipal extends Escenas {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
             }//end method onAccuracyChanged
         };
-
         sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-
-
-
         pulsadoBoton = false;
         hayAviso = false;
         respuesta = false;
         moverNumero = false;
-
-
-
     }//end constructor
 
+
+    /**
+     * Metodo que se encarga de dibuja en el canvas
+     * @param c  Canvas en el que se va a dibujar
+     */
     @Override
     public void dibujar(Canvas c) {
         try {
@@ -176,9 +188,6 @@ public class EscenaPrincipal extends Escenas {
                 avisoDineroOffline = new pantallaAvisos(altoPantalla,anchoPantalla, s, context, pincelFondo, pincelCuadro, pincelTexto);
                 avisoDineroOffline.cuadroEstandar(c);
             }//end if
-
-
-
             if(respuesta){
                 cuadroAviso.cuadroEstandar(c);
             }//end if
@@ -187,43 +196,22 @@ public class EscenaPrincipal extends Escenas {
                     cuadroConBotones.cuadroBotones(c);
                 }//end if
             }//end else
-
-
-
-            //Pruebas para la animación, ya te digo que necesitar
-            //un timer o un hilo para esto
-            /*
-            if(moverNumero){
-                mov.dibuja(c);
-                mov.movimiento();
-                moverNumero = false;
-            }//end if
-            */
-
-
-
         }catch(Exception e){
             e.printStackTrace();
         }//end catch
         super.dibujar(c);
     }//end method dibujar
 
-    @Override
-    public void actualizarFisica() {
-        //super.actualizarFisica();
-
-
-    }//end actualizarFisica
-
-
-
+    /**
+     * Metodo que se lanza cuando se produce una pulsación en la pantalla
+     * @param event evento de la pulsación
+     * @return devuelve el número de escena que se debe dibujar
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
-        //Tarea pendiente quitar todos los editor.put de cada touch y simplemente
-        //ponerlos solo cuando se vaya a cambiar de pantalla
         int x = (int)event.getX();
         int y = (int)event.getY();
-
+        //Comprueba si se tiene que prodducir un evento
         comprobar();
 
         if(hayAviso) {
@@ -241,29 +229,18 @@ public class EscenaPrincipal extends Escenas {
         }//end if
         else {
             respuesta = false;
-
             if (btnOpciones.contains(x, y)) {
                 timer.cancel();
                 timer.purge();
 
                 return 4;
             }//end if
-
             if (pulsador.contains(x, y)) {
                 money += dineroPulsacion;
                 editor.putInt("money", money).commit();
                 //Sonido que se genera
                 int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 efectos.play(sonidoCoin,1,1,1,0,1);
-
-
-                /*
-                //Movimiento del numero por pantalla
-                randomPosX = new Random().nextInt(pulsador.width()) + anchoPantalla/3;
-                Point p = new Point(randomPosX, anchoPantalla/3);
-                mov = new movimientoNumero(money, 150, p);
-                moverNumero = true;
-                 */
                 //Si pulsamos dentro del boton cambiamos su sprite
                 pulsadoBoton = true;
                 return numEscena;
@@ -275,13 +252,11 @@ public class EscenaPrincipal extends Escenas {
                 return 2;
             }//end if
         }//end else
-
         //Cuando se toca la pantalla se cierra el cuadro de dialogo
         if (trabajadores.mensajeBeneficios)
         {
             trabajadores.mensajeBeneficios = false;
         }//end if
-
         return numEscena;
    }//end onTouchEvent
 
@@ -290,9 +265,12 @@ public class EscenaPrincipal extends Escenas {
 
 
     //Comprueba si se han cumplido los ifs de algunos eventos
+
+    /**
+     * Comprueba si se cumplen las condiciones de alguno
+     * de los eventos.
+     */
     public void comprobar(){
-
-
         if(money >= 4000 && flag1) {
             String text = context.getResources().getString(R.string.evento1);
             cuadroConBotones.setTexto(text);
@@ -335,7 +313,11 @@ public class EscenaPrincipal extends Escenas {
     }//end method probar
 
 
-
+    /**
+     * Dependiendo del evento, devuelve sus resultados
+     * @param caso booleano que indica si el usuario a dado una respuesta positiva o negativa
+     * @return devuelve un string correspondiente a la decisión del usuario(caso)
+     */
     public String respuesta(boolean caso){
         switch (numAviso){
             case 1:
@@ -400,19 +382,8 @@ public class EscenaPrincipal extends Escenas {
                     editor.putInt("energiaTrabajadores", trabajadores.energia).commit();
                     return context.getResources().getString(R.string.evento4False);
                 }//end else
-
             default:
                 return "";
         }//end switch
     }//end method respuesta
-
-
-
-
-
-
-
-
-
-
 }//end class EscenaPrincipal

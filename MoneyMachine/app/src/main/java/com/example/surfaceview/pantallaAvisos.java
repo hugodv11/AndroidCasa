@@ -11,7 +11,9 @@ import android.graphics.Rect;
 import android.media.Image;
 import android.util.Log;
 
-//Clase que se utilizará para crear ventanas emergentes en la app
+/**
+ * Clase que se utiliza para crear ventanas emergentes en la app
+ */
 public class pantallaAvisos {
 
     private int altoPantalla, anchoPantalla;
@@ -23,7 +25,16 @@ public class pantallaAvisos {
     public Rect btnAceptar, btnCancelar;
     private String[] textos;
 
-
+    /**
+     *
+     * @param altoPantalla alto de la pantalla del dispositivo
+     * @param anchoPantalla ancho de la pantalla del dispositivo
+     * @param texto //texto que se dibujara en la ventana
+     * @param context contexto de la aplicación
+     * @param pincelFondo pincel para el fondo
+     * @param pincelCuadro pincel para el cuadro
+     * @param pincelTexto pincel para el texto
+     */
     public pantallaAvisos(int altoPantalla, int anchoPantalla, String texto, Context context, Paint pincelFondo, Paint pincelCuadro, Paint pincelTexto) {
         this.altoPantalla = altoPantalla;
         this.anchoPantalla = anchoPantalla;
@@ -100,21 +111,16 @@ public class pantallaAvisos {
         this.bitmapFondo = bitmapFondo;
     }
 
-
-    //El bitmap fondo y auxiliar sirven para poder poner la imagen que va a aparecer con transpariencia
-    //Necesario que el texto no se salga del cuadro(no creo que lo haga de forma correcta, probare cuantas letras
-    //entran mas o menos cuando cambie la fuente, y añadire un salto de linea y pa diante)
-    //Todos los colores se pueden cambiar con los pinceles
-
     //METODOS
-    //Metodo que dibuja un cuadro de dialogo informativo, sin botones y sin ser interactuable
+    /**
+     * Metodo que dibuja un cuadro de dialogo informativo, sin botones y sin ser interactuable
+     * @param c canvas en el que se va a dibujar
+     */
     public void cuadroEstandar(Canvas c){
         aux = BitmapFactory.decodeResource(context.getResources(), R.drawable.mejoras);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
         this.textos = texto.split("\\.");
-
         //Zona de dibujado
-
         c.drawBitmap(bitmapFondo, 0, 0, pincelFondo);
         c.drawRect(cuadro, pincelCuadro);
         int posY = altoPantalla / 3 ;
@@ -124,8 +130,10 @@ public class pantallaAvisos {
         }//end for
     }//end method cuadroEstandar
 
-
-    //Metodo que dibuja un cuadro de dialogo informativo, con botones e interactuable
+    /**
+     * Metodo que dibuja un cuadro de dialogo informativo, con botones e interactuable
+     * @param c canvas en el que se va a dibujar
+     */
     public void cuadroBotones(Canvas c){
         aux = BitmapFactory.decodeResource(context.getResources(), R.drawable.mejoras);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
@@ -148,8 +156,5 @@ public class pantallaAvisos {
         int cancelCenterY = btnCancelar.centerY();
         c.drawText(context.getResources().getString(R.string.btnAceptar), aceptCenterX, aceptCenterY, pincelTexto);
         c.drawText(context.getResources().getString(R.string.btnCancelar), cancelCenterX, cancelCenterY, pincelTexto);
-
     }//end method cuadroBotones
-
-
 }//end class PantallaAvisos
