@@ -60,7 +60,7 @@ public class EscenaOpciones extends Escenas {
     @Override
     public void dibujar(Canvas c) {
         super.dibujar(c);
-        pincelTxt.setTextSize(70);
+        pincelTxt.setTextSize(65);
         pincelRec.setColor(Color.RED);
         c.drawBitmap(bitmapFondo,0, 0, null);
         c.drawBitmap(bitmapBtnCreditos, 0, 0, null);

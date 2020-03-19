@@ -11,16 +11,10 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.Image;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
-import android.os.Build;
+import android.os.Vibrator;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-
 import androidx.core.view.GestureDetectorCompat;
 
 
@@ -51,6 +45,8 @@ public class Escenas {
     Paint pincelCuadro = new Paint();
     Paint pincelTexto = new Paint();
 
+    //Variable para controlar el vibrador
+    Vibrator vibrator;
 
     //Variables para el control de sonido
     //Efectos de sonido
@@ -178,6 +174,8 @@ public class Escenas {
         }//end else
 
 
+        //Vibrador
+         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         //detector de gestos
         detectorDeGestos = new GestureDetectorCompat(context, new DetectorDeGestos());
 

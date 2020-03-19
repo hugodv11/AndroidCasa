@@ -7,8 +7,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.VibrationEffect;
+import android.util.Log;
 import android.view.MotionEvent;
 
 
@@ -23,6 +29,10 @@ public class EscenaPrincipal extends Escenas {
 
     Rect pulsador, btnMejora, btnOpciones;
 
+    //Variables para el uso del acelerómetro
+    SensorManager sensorManager;
+    Sensor sensor;
+    SensorEventListener sensorEventListener;
 
     Timer timer, timerEventos;
     int gap=2000;
@@ -49,6 +59,7 @@ public class EscenaPrincipal extends Escenas {
     int randomPosX;
     movimientoNumero mov;
     Boolean moverNumero;
+    Boolean shake, oneTime;
 
 
 
@@ -95,6 +106,41 @@ public class EscenaPrincipal extends Escenas {
         timer = new Timer();
         // Dentro de 0 milisegundos avísame cada 2000 milisegundos
         timer.scheduleAtFixedRate(timerTask, 0, tiempoAutoclick);
+
+        //Variables para el uso del acelerómetro
+        shake = false;
+        oneTime = false;
+        sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                float x = event.values[0];
+                //Cada vez que inclinas el movil hacia la izquiera es
+                //como si hicieras una pulsación
+                if(x >= 5){
+                    if(!oneTime){
+                        shake = true;
+                    }//end if
+                }//end if
+                if(shake){
+                    if(x <= 5){
+                        money += dineroPulsacion;
+                        shake = false;
+                        oneTime = true;
+                    }//end if
+                }//end if
+                else{
+                    oneTime = false;
+                }//end else
+                editor.putInt("money", money);
+            }//end method onSensorChanged
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }//end method onAccuracyChanged
+        };
+
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
 
 
@@ -253,12 +299,12 @@ public class EscenaPrincipal extends Escenas {
         //Comprobar aqui que texto devolver
         if(money >= 50 && flag1) {
             String text = context.getResources().getString(R.string.evento1);
-
             cuadroConBotones.setTexto(text);
             numAviso = 1;
             hayAviso = true;
             flag1 = false;
             editor.putBoolean("flag1", false).commit();
+            vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
         }//end if
     }//end method probar
 
