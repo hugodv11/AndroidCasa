@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MoneyMachine</string>
+    <string name="dinero">Money:</string>
+    <string name="ganado1">You won</string>
+    <string name="ganado2">while you were away!</string>
+    <string name="evento1">Your workers are hungry.
+                    ¿What if you organize a dinner.
+                    for the entire staff?</string>
+    <string name="evento1True">Your workers are happier!!!</string>
+    <string name="evento1False">Your workers get a little sad!!!</string>
+    <string name="coste">Value : </string>
+    <string name="creditos">Credits</string>
+    <string name="btnAceptar">Accept</string>
+    <string name="btnCancelar">Cancel</string>
+</resources>

@@ -16,10 +16,10 @@ import java.util.HashMap;
 
 public class EscenaMejoras extends Escenas {
 
-    Rect btnVolver, mejoraPulsación, mejoraAutoclick, mejoraTiempoAutoClick;
-    Bitmap bitmapPulsacion, bitmapAutoclick, bitmapCosteAutoClick, bitmapVolver;
+    Rect btnVolver, mejoraPulsación, mejoraAutoclick, mejoraTiempoAutoClick, btnAyuda;
+    Bitmap bitmapPulsacion, bitmapAutoclick, bitmapCosteAutoClick, bitmapVolver, bitmapBtnAyuda, bitmapAyuda;
     int separacion;
-
+    boolean ayuda;
 
     //Constructor
     public EscenaMejoras(int numEscena, Context context, int altoPantalla, int anchoPantalla) {
@@ -34,7 +34,7 @@ public class EscenaMejoras extends Escenas {
         mejoraPulsación = new Rect(anchoPantalla/20, altoPantalla/10, anchoPantalla - anchoPantalla / 20    , (altoPantalla/10) * 2);
         mejoraTiempoAutoClick =new Rect(anchoPantalla/20, (altoPantalla / 10) * 3 - separacion, anchoPantalla - anchoPantalla / 20, (altoPantalla/10) * 4 - separacion);
         mejoraAutoclick = new Rect(anchoPantalla/20, (altoPantalla / 10) * 5 - (separacion * 2), anchoPantalla - anchoPantalla / 20, (altoPantalla/10) * 6 - (separacion * 2));
-
+        btnAyuda = new Rect(anchoPantalla - anchoPantalla/9, 0, anchoPantalla, anchoPantalla/9);
         //Bitmaps
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.dollar);
         bitmapPulsacion = aux.createScaledBitmap(aux,mejoraPulsación.width()/4 , mejoraPulsación.height() - (mejoraPulsación.height() / 9),true);
@@ -48,31 +48,10 @@ public class EscenaMejoras extends Escenas {
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.izquierda);
         bitmapVolver = aux.createScaledBitmap(aux, btnVolver.width(),btnVolver.height(),true);
 
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayuda);
+        bitmapBtnAyuda = aux.createScaledBitmap(aux, btnAyuda.width(), btnAyuda.height(), true);
 
-
-
-        //Muy importante mas ideas para mejorar parte clicker, para hacer más profunda la progresión
-
-        //Probabilidad de critico: cierta probabilidad cada vez que se pulsa el botón de ganar un multiplicador.
-        //Se puede mejorar la probabilidad o el multiplicador.
-
-        //Al pulsar el boton de la pantalla principal crear algunos efectos especiales(+Dinero que salga del boton
-        //y luego se desvanezca por ejemplo)
-
-        //Los indicadores de la pantalla de trabajadores tienen que ser dinamicos, ajustandose a sus valores
-        //Sueldo de los trabajadores, añadir ese calculo al metodo calcularDatos
-
-
-
-
-
-
-        //Idea es dibujar las mejoras como si fuera un recycleView, en la parte izquierda el nombre y en la derecha
-        //El coste y una pequeña descripción.(Nada muy loco, algo resulton pero sencillito).
-
-
-
-
+        ayuda = false;
     }//end constructor
 
     @Override
@@ -91,12 +70,24 @@ public class EscenaMejoras extends Escenas {
         c.drawBitmap(bitmapPulsacion, anchoPantalla/20, altoPantalla/10, null);
         c.drawBitmap(bitmapAutoclick, anchoPantalla/20, (altoPantalla / 10) * 3 - separacion, null);
         c.drawBitmap(bitmapCosteAutoClick, anchoPantalla/20, (altoPantalla / 10) * 5 - (separacion * 2), null);
-
-
+        c.drawBitmap(bitmapBtnAyuda, anchoPantalla - anchoPantalla/9, 0, null);
         pincelTxt.setColor(Color.WHITE);
-        c.drawText("Coste : " + costoMejoraPulsacion, mejoraPulsación.centerX() + anchoPantalla / 8, mejoraPulsación.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
-        c.drawText("Coste : " + costoMejoraAutoclick, mejoraAutoclick.centerX() + anchoPantalla / 8, mejoraAutoclick.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
-        c.drawText("Coste : " + costoTiempoAutoclick, mejoraTiempoAutoClick.centerX() + anchoPantalla / 8, mejoraTiempoAutoClick.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
+        String s = context.getResources().getString(R.string.coste);
+        c.drawText(s + " " + costoMejoraPulsacion, mejoraPulsación.centerX() + anchoPantalla / 8, mejoraPulsación.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
+        c.drawText(s + " " + costoMejoraAutoclick, mejoraAutoclick.centerX() + anchoPantalla / 8, mejoraAutoclick.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
+        c.drawText(s + " " + costoTiempoAutoclick, mejoraTiempoAutoClick.centerX() + anchoPantalla / 8, mejoraTiempoAutoClick.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
+
+        if(!ingles){
+            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayudamejoras);
+            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
+        }//end if
+        else {
+            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.helpupgrades);
+            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
+        }//end else
+        if(ayuda) {
+            c.drawBitmap(bitmapAyuda, 0, 0, null);
+        }//end if
         super.dibujar(c);
     }//end dibujar
 
@@ -113,6 +104,14 @@ public class EscenaMejoras extends Escenas {
         if(btnVolver.contains(x, y)) {
             return 1;
         }//end if
+
+        if(btnAyuda.contains(x, y)){
+            ayuda = true;
+        }//end if
+        else {
+            ayuda = false;
+        }//end else
+
         if(mejoraPulsación.contains(x, y)) {
             if(money >= costoMejoraPulsacion){
                 dineroPulsacion += 2;

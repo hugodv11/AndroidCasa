@@ -53,8 +53,7 @@ public class EscenaPrincipal extends Escenas {
 
 
 
-    //Control de la musica
-    public MediaPlayer mediaPlayer;
+
 
     Bitmap bitmapOpciones, bitmapMejoras, bitmapBtn;
 
@@ -97,11 +96,7 @@ public class EscenaPrincipal extends Escenas {
         // Dentro de 0 milisegundos avísame cada 2000 milisegundos
         timer.scheduleAtFixedRate(timerTask, 0, tiempoAutoclick);
 
-        //Musica de la pantalla
-        mediaPlayer = MediaPlayer.create(context, R.raw.principal);
-        mediaPlayer.setVolume(1, 1);
-        //Comentado para que no de por culo
-        mediaPlayer.start();
+
 
         pulsadoBoton = false;
         hayAviso = false;
@@ -136,7 +131,8 @@ public class EscenaPrincipal extends Escenas {
 
             //Si los trabajadores han ganado algo offline lo mostramos
             if(trabajadores.mensajeBeneficios){
-                avisoDineroOffline = new pantallaAvisos(altoPantalla,anchoPantalla, "Has ganado " + moneyOffline + " mientras estabas fuera!", context, pincelFondo, pincelCuadro, pincelTexto);
+                String s = context.getResources().getString(R.string.ganado1) + " " + moneyOffline + " " + context.getResources().getString(R.string.ganado2);
+                avisoDineroOffline = new pantallaAvisos(altoPantalla,anchoPantalla, s, context, pincelFondo, pincelCuadro, pincelTexto);
                 avisoDineroOffline.cuadroEstandar(c);
             }//end if
 
@@ -256,9 +252,7 @@ public class EscenaPrincipal extends Escenas {
     public void comprobar(){
         //Comprobar aqui que texto devolver
         if(money >= 50 && flag1) {
-            String text = "Tus trabajadores están hambrientos." +
-                    "¿Que tal si organizas una cena para." +
-                    "toda la plantilla?";
+            String text = context.getResources().getString(R.string.evento1);
 
             cuadroConBotones.setTexto(text);
             numAviso = 1;
@@ -276,15 +270,15 @@ public class EscenaPrincipal extends Escenas {
                 if(caso){
                     trabajadores.salud += 5;
                     editor.putInt("saludTrabajadores", trabajadores.salud).commit();
-                    return "Tus trabajadores estan más contentos!!!";
+                    return context.getResources().getString(R.string.evento1True);
                 }//end if
                 else{
                     trabajadores.salud -= 5;
                     editor.putInt("saludTrabajadores", trabajadores.salud).commit();
-                    return "Tus trabajadores se desaniman un poco!!!";
+                    return context.getResources().getString(R.string.evento1False);
                 }//end else
             default:
-                return "Locooo";
+                return "";
         }//end switch
     }//end method respuesta
 

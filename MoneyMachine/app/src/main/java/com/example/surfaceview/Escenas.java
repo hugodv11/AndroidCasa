@@ -2,6 +2,8 @@ package com.example.surfaceview;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.media.Image;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -25,6 +28,7 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import javax.security.auth.login.LoginException;
 
@@ -90,7 +94,8 @@ public class Escenas {
     //flags de los eventos
     boolean flag1;
 
-
+    //Idiomas
+    boolean ingles;
 
 
     //CONSTRUCTOR
@@ -132,15 +137,6 @@ public class Escenas {
 
         cuadroConBotones = new pantallaAvisos(altoPantalla,anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
         cuadroAviso = new pantallaAvisos(altoPantalla,anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
-
-
-
-
-
-
-
-
-
         //Utilizamos el shared Preference para darle valor a las variables
         //Utilizo los valores por defecto por si es la primera vez que se juega o por si
         //se han borrado los datos
@@ -174,15 +170,29 @@ public class Escenas {
         //Avisos
         flag1 = preferences.getBoolean("flag1", true);
 
+        ingles = preferences.getBoolean("ingles", false);
+        if(ingles){
+            setAppLocale("en");
+        }else {
+            setAppLocale("es_ES");
+        }//end else
+
 
         //detector de gestos
         detectorDeGestos = new GestureDetectorCompat(context, new DetectorDeGestos());
 
 
 
-
     }//end constructor
 
+
+    public void setAppLocale(String localCode){
+        Resources res = context.getResources();
+        DisplayMetrics ds = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale(localCode.toLowerCase()));
+        res.updateConfiguration(conf, ds);
+    }//end method setAppLocale
 
     /**
      * Metodo que se utiliza para dibujar en el canvas.
@@ -200,7 +210,7 @@ public class Escenas {
         pincelTxt.setColor(Color.BLACK);
         pincelRec.setColor(Color.GREEN);
         try{
-            c.drawText("Dinero = " + money,anchoPantalla/2, 100, pincelTxt);
+            c.drawText( context.getResources().getString(R.string.dinero) + " " + money,anchoPantalla/2, 100, pincelTxt);
         }//end try
         catch(Exception e){
             e.printStackTrace();
@@ -239,7 +249,6 @@ public class Escenas {
         if(diffTiempo == 0) {
             diffMin = currentTime.getMinutes() - minutosAn;
             diffTiempo += diffMin;
-            Log.i("tiempo", "" + diffTiempo);
         }//end if
         else{
             if(diffTiempo > 0) {
@@ -251,19 +260,16 @@ public class Escenas {
                     //si es positivo significa que no han pasado las horas completas, por lo que
                     //restamos al total
                     diffTiempo -= diffMin;
-                    Log.i("tiempo", "" + diffTiempo);
                 }//end if
                 else{
                     //por el contrario se le suma ya que han pasado las horas justas mas algunos minutos
                     //tambien lo utilizamos si es 0
                     diffTiempo += diffMin;
-                    Log.i("tiempo", "" + diffTiempo);
-                }//end else
+                                    }//end else
             }//end if
             //si despues de calcular la diferencia de tiempo el valor es negativo significa que han pasado
             //24h o mas
             else {
-                Log.i("tiempo", "han pasado 24h");
                 diffTiempo = 1440;
             }//end else
         }//end else
@@ -307,6 +313,9 @@ public class Escenas {
 
     public void actualizarFisica(){
     }
+
+
+
 
 
     public int  onTouchEvent(MotionEvent event){

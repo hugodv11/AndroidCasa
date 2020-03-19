@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MoneyMachine</string>
-    <string name="dinero">Dinero:  </string>
-    <string name="ganado1">Has ganado </string>
+    <string name="dinero">Dinero:</string>
+    <string name="ganado1">Has ganado</string>
     <string name="ganado2"> mientras estabas fuera!</string>
     <string name="evento1">Tus trabajadores están hambrientos.
                     ¿Que tal si organizas una cena para.
@@ -12,11 +13,4 @@
     <string name="creditos">Créditos</string>
     <string name="btnAceptar">Aceptar</string>
     <string name="btnCancelar">Cancelar</string>
-
-
-
-
-
-
-
 </resources>

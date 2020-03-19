@@ -140,8 +140,8 @@ public class pantallaAvisos {
         int aceptCenterY = btnAceptar.centerY();
         int cancelCenterX = btnCancelar.centerX();
         int cancelCenterY = btnCancelar.centerY();
-        c.drawText("Aceptar", aceptCenterX, aceptCenterY, pincelTexto);
-        c.drawText("Cancelar", cancelCenterX, cancelCenterY, pincelTexto);
+        c.drawText(context.getResources().getString(R.string.btnAceptar), aceptCenterX, aceptCenterY, pincelTexto);
+        c.drawText(context.getResources().getString(R.string.btnCancelar), cancelCenterX, cancelCenterY, pincelTexto);
 
     }//end method cuadroBotones
 

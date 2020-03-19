@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -29,6 +30,8 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
     private  Hilo hilo;                   //Hilo encargado de dibujar y actualizar física
     private boolean funcionando = false;  //Control del hilo
     private int btnPulsado, btnNormal;
+    //Control de la musica
+    public static MediaPlayer mediaPlayer;
 
     //Variables control de escenas
     Escenas escenaActual;
@@ -45,7 +48,10 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         detectorDeGestos = new GestureDetectorCompat(context, new DetectorDeGestos());
         btnNormal = R.drawable.boton;
         btnPulsado = R.drawable.botonpulsado;
-
+        //Musica de la pantalla
+        mediaPlayer = MediaPlayer.create(context, R.raw.principal);
+        mediaPlayer.setVolume(1, 1);
+        mediaPlayer.setLooping(true);
     }//end contructor
 
 
@@ -82,7 +88,7 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
                     break;
                 case 3 : escenaActual = new EscenaTrabajadores(3, context, altoPantalla, anchoPantalla);
                     break;
-                case 4 : escenaActual = new EscenaOpciones(4, context, altoPantalla, anchoPantalla);
+                case 4 : escenaActual = new EscenaOpciones(4, context, altoPantalla, anchoPantalla, mediaPlayer);
                     break;
             }//end switch
         }//end if
@@ -95,6 +101,8 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         if (gesto) escenaActual = new EscenaTrabajadores(3, context, altoPantalla, anchoPantalla);
         return true;
     }//end method onTouch
+
+
 
 
     //Se ejecuta inmediatamente después de que la creación de la superficie de dibujo.
@@ -119,6 +127,8 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         anchoPantalla = width;
         altoPantalla = height;
         escenaActual = new EscenaPrincipal(1, context,altoPantalla,anchoPantalla, btnNormal);
+        //Ponemos la musica
+        mediaPlayer.start();
         //Control temporal y calculo de los datos que lanzamos cuando le damos
         //valor a escenaActual por primera vez.
         escenaActual.controlTemporal();
@@ -142,6 +152,8 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
             e.printStackTrace();
         }
     }//end method surfaceDestroyed
+
+
 
 
 
