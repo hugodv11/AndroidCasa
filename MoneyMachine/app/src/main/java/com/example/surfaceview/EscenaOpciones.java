@@ -17,20 +17,35 @@ import javax.security.auth.login.LoginException;
 
 public class EscenaOpciones extends Escenas {
 
-    Rect btnVolver, btnBorrarDatos;
+    Rect btnVolver, btnBorrarDatos, btnCreditos;
 
-    Bitmap bitmapVolver;
+    Bitmap bitmapVolver, bitmapBorrar, bitmapBtnCreditos, bitmapCreditos;
+
+    boolean creditos;
 
     public EscenaOpciones(int numEscena, Context context, int altoPantalla, int anchoPantalla) {
         super(numEscena, context, altoPantalla, anchoPantalla);
-        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.opciones);
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.mejoras);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
 
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.creditos);
+        bitmapCreditos = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
+
+        btnCreditos = new Rect(0, 0, anchoPantalla/4, anchoPantalla/9);
         btnVolver = new Rect(anchoPantalla - anchoPantalla/9, 0, anchoPantalla, anchoPantalla/9);
-        btnBorrarDatos = new Rect(100, altoPantalla - 300, 300, altoPantalla - 50);
+        btnBorrarDatos = new Rect(anchoPantalla/10, altoPantalla - altoPantalla/6, anchoPantalla/10 * 3, altoPantalla - altoPantalla/20);
 
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.derecha);
         bitmapVolver = aux.createScaledBitmap(aux,btnVolver.width(), btnVolver.height(),true);
+
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.papelera);
+        bitmapBorrar = aux.createScaledBitmap(aux, btnBorrarDatos.width(), btnBorrarDatos.height(),true);
+
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.contenedor);
+        bitmapBtnCreditos = aux.createScaledBitmap(aux, btnCreditos.width(), btnCreditos.height(),true);
+
+
+        creditos = false;
     }//end constructor
 
 
@@ -38,8 +53,14 @@ public class EscenaOpciones extends Escenas {
     public void dibujar(Canvas c) {
         pincelRec.setColor(Color.RED);
         c.drawBitmap(bitmapFondo,0, 0, null);
+        c.drawBitmap(bitmapBtnCreditos, 0, 0, null);
         c.drawBitmap(bitmapVolver, anchoPantalla - btnVolver.width(), 0,null);
-        c.drawRect(btnBorrarDatos, pincelRec);
+        c.drawBitmap(bitmapBorrar, anchoPantalla/10, altoPantalla - altoPantalla/6, null);
+        c.drawText("Créditos", btnCreditos.centerX(), btnCreditos.centerY(), pincelTxt);
+
+        if(creditos){
+            c.drawBitmap(bitmapCreditos, 0 ,0, null);
+        }//end if
     }//end dibujar
 
 
@@ -47,8 +68,14 @@ public class EscenaOpciones extends Escenas {
     public int onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
         int y = (int)event.getY();
+        if(creditos = true){
+            creditos = false;
+        }//end if
         if(btnVolver.contains(x, y)){
             return 1;
+        }//end if
+        if(btnCreditos.contains(x, y)){
+            creditos = true;
         }//end if
         if(btnBorrarDatos.contains(x, y)){
             //Aqui borramos datos, lo suyo seria preguntar si esta seguro con un fragment??
