@@ -88,7 +88,7 @@ public class Escenas {
     Date currentTime;
 
     //flags de los eventos
-    boolean flag1;
+    boolean flag1, flag2, flag3, flag4;
 
     //Idiomas
     boolean ingles;
@@ -144,12 +144,12 @@ public class Escenas {
         autoclick = preferences.getInt("autoclick", 0);
         tiempoAutoclick = preferences.getInt("tiempoAutoClick", 2000);
         costoMejoraPulsacion = preferences.getInt("costoMejoraPulsacion", 4);
-        costoMejoraAutoclick = preferences.getInt("costoMejoraAutoclick", 30);
-        costoTiempoAutoclick = preferences.getInt("costoTiempoAutoClick", 300);
+        costoMejoraAutoclick = preferences.getInt("costoMejoraAutoclick", 70);
+        costoTiempoAutoclick = preferences.getInt("costoTiempoAutoClick", 600);
         rellenarEnergia = preferences.getInt("rellenarEnergia", 1000);
 
         //Valores de la clase Trabajadores
-        trabajadores.numero = preferences.getInt("numeroTrabajadores", 5);
+        trabajadores.numero = preferences.getInt("numeroTrabajadores", 1);
         trabajadores.energia = preferences.getInt("energiaTrabajadores", 100);
         trabajadores.salud = preferences.getInt("saludTrabajadores", 50);
         trabajadores.salario = preferences.getInt("salarioTbj", 1500);
@@ -165,6 +165,9 @@ public class Escenas {
 
         //Avisos
         flag1 = preferences.getBoolean("flag1", true);
+        flag2 = preferences.getBoolean("flag2", true);
+        flag3 = preferences.getBoolean("flag3", true);
+        flag4 = preferences.getBoolean("flag4", true);
 
         ingles = preferences.getBoolean("ingles", false);
         if(ingles){

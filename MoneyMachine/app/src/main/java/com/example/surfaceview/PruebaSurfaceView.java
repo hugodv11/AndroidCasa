@@ -174,6 +174,15 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
                             if (escenaActual != null) {
                                 escenaActual.actualizarFisica();
                                 escenaActual.dibujar(c);
+                                if(escenaActual instanceof EscenaOpciones){
+                                    MediaPlayer newmediaPlayer = ((EscenaOpciones) escenaActual).cambiarSonido(mediaPlayer);
+                                    if(newmediaPlayer != mediaPlayer){
+                                        mediaPlayer.stop();
+                                        newmediaPlayer.start();
+                                        mediaPlayer = newmediaPlayer;
+                                    }//end if
+                                }//end if
+
                             }//end if
                         }//end synchronized
                     }//end if

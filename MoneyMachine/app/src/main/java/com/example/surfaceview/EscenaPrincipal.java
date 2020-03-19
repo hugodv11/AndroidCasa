@@ -61,11 +61,6 @@ public class EscenaPrincipal extends Escenas {
     Boolean moverNumero;
     Boolean shake, oneTime;
 
-
-
-
-
-
     Bitmap bitmapOpciones, bitmapMejoras, bitmapBtn;
 
 
@@ -296,14 +291,45 @@ public class EscenaPrincipal extends Escenas {
 
     //Comprueba si se han cumplido los ifs de algunos eventos
     public void comprobar(){
-        //Comprobar aqui que texto devolver
-        if(money >= 50 && flag1) {
+
+
+        if(money >= 4000 && flag1) {
             String text = context.getResources().getString(R.string.evento1);
             cuadroConBotones.setTexto(text);
             numAviso = 1;
             hayAviso = true;
             flag1 = false;
             editor.putBoolean("flag1", false).commit();
+            vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+        }//end if
+
+        if(money >= 2000 && flag2) {
+            String text = context.getResources().getString(R.string.evento2);
+            cuadroConBotones.setTexto(text);
+            numAviso = 2;
+            hayAviso = true;
+            flag2 = false;
+            editor.putBoolean("flag2", false).commit();
+            vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+        }//end if
+
+        if(money >= 10000 && flag3) {
+            String text = context.getResources().getString(R.string.evento3);
+            cuadroConBotones.setTexto(text);
+            numAviso = 3;
+            hayAviso = true;
+            flag3 = false;
+            editor.putBoolean("flag3", false).commit();
+            vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+        }//end if
+
+        if(money >= 30000000 && flag4) {
+            String text = context.getResources().getString(R.string.evento4);
+            cuadroConBotones.setTexto(text);
+            numAviso = 4;
+            hayAviso = true;
+            flag4 = false;
+            editor.putBoolean("flag4", false).commit();
             vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
         }//end if
     }//end method probar
@@ -323,6 +349,58 @@ public class EscenaPrincipal extends Escenas {
                     editor.putInt("saludTrabajadores", trabajadores.salud).commit();
                     return context.getResources().getString(R.string.evento1False);
                 }//end else
+
+            case 2:
+                return context.getResources().getString(R.string.evento2);
+
+            case 3:
+                if(caso){
+                    trabajadores.salud += 10;
+                    trabajadores.energia = 0;
+                    editor.putInt("saludTrabajadores", trabajadores.salud);
+                    editor.putInt("energiaTrabajadores", trabajadores.energia).commit();
+                    return context.getResources().getString(R.string.evento3True);
+                }//end if
+                else{
+                    trabajadores.salud -= 10;
+                    trabajadores.energia += 40;
+                    if(trabajadores.energia > 100){
+                        trabajadores.energia = 100;
+                    }//end if
+                    editor.putInt("saludTrabajadores", trabajadores.salud);
+                    editor.putInt("energiaTrabajadores", trabajadores.energia).commit();
+                    return context.getResources().getString(R.string.evento3False);
+                }//end else
+
+            case 4:
+                if(caso){
+                    trabajadores.salud += 10;
+                    trabajadores.energia += 60;
+                    if (trabajadores.energia > 100) {
+                        trabajadores.energia = 100;
+                    }//end if
+                    money -= dineroPulsacion * 10;
+                    if(money >0){
+                        money = 0;
+                    }//end if
+                    editor.putInt("saludTrabajadores", trabajadores.salud);
+                    editor.putInt("money", money);
+                    editor.putInt("energiaTrabajadores", trabajadores.energia).commit();
+                    return context.getResources().getString(R.string.evento4True);
+                }//end if
+                else {
+                    trabajadores.salud -= 20;
+                    trabajadores.energia -= 80;
+                    if (trabajadores.energia < 0) {
+                        trabajadores.energia = 0;
+                    }//end if
+                    money += dineroPulsacion * 20;
+                    editor.putInt("saludTrabajadores", trabajadores.salud);
+                    editor.putInt("money", money);
+                    editor.putInt("energiaTrabajadores", trabajadores.energia).commit();
+                    return context.getResources().getString(R.string.evento4False);
+                }//end else
+
             default:
                 return "";
         }//end switch

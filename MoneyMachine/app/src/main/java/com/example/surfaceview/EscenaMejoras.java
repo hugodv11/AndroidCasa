@@ -114,7 +114,7 @@ public class EscenaMejoras extends Escenas {
 
         if(mejoraPulsación.contains(x, y)) {
             if(money >= costoMejoraPulsacion){
-                dineroPulsacion += 2;
+                dineroPulsacion += 7;
                 money -= costoMejoraPulsacion;
                 costoMejoraPulsacion *= 2;
                 editor.putInt("money", money);
@@ -126,7 +126,8 @@ public class EscenaMejoras extends Escenas {
 
         if(mejoraAutoclick.contains(x, y)) {
             if(money >= costoMejoraAutoclick){
-                autoclick++;
+                autoclick += 6;
+                autoclick *= 3;
                 money -= costoMejoraAutoclick;
                 costoMejoraAutoclick *= 4;
                 editor.putInt("money", money);
@@ -136,11 +137,12 @@ public class EscenaMejoras extends Escenas {
             }//end if
         }//end if
 
-        //Limitar cuanto se puede bajar el tiempo, ya que puede llegar a petar
-        //(Por ejemplo, maximo nivel que el autoclick lo haga cada medio segundo)
         if(mejoraTiempoAutoClick.contains(x, y)){
             if(money >= costoTiempoAutoclick) {
-                tiempoAutoclick -= 500;
+                tiempoAutoclick -= 250;
+                if(tiempoAutoclick > 500){
+                    tiempoAutoclick = 500;
+                }//end if
                 money -= costoTiempoAutoclick;
                 costoTiempoAutoclick *= 5;
                 editor.putInt("money", money);

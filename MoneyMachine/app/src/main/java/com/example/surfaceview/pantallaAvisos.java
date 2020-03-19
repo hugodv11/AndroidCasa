@@ -111,11 +111,17 @@ public class pantallaAvisos {
     public void cuadroEstandar(Canvas c){
         aux = BitmapFactory.decodeResource(context.getResources(), R.drawable.mejoras);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
+        this.textos = texto.split("\\.");
 
         //Zona de dibujado
+
         c.drawBitmap(bitmapFondo, 0, 0, pincelFondo);
         c.drawRect(cuadro, pincelCuadro);
-        c.drawText(texto, anchoPantalla/2, altoPantalla/2, pincelTexto);
+        int posY = altoPantalla / 3 ;
+        for(int i = 0; i < textos.length; i++) {
+            posY += altoPantalla/20;
+            c.drawText(textos[i], cuadro.centerX(), posY , pincelTexto);
+        }//end for
     }//end method cuadroEstandar
 
 

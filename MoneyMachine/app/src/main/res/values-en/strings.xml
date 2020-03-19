@@ -9,6 +9,25 @@
                     for the entire staff?</string>
     <string name="evento1True">Your workers are happier!!!</string>
     <string name="evento1False">Your workers get a little sad!!!</string>
+    <string name="evento2">The company is doing great.
+                    Swipe left to see how your.
+                    employees are doing</string>
+    <string name="evento3">Your workers want to.
+                        have a party!!!</string>
+    <string name="evento3True">Your workers are happy.
+                                but very tired!!!</string>
+    <string name="evento3False">Your workers get angry!!!.
+                                But they are more rested</string>
+
+    <string name="evento4">Your workers are tired.
+                    ¿Do you give them.
+                    a couple of days off??</string>
+    <string name="evento4True">Your workers are more.
+                                rested and happy!!!.
+                                You loose money</string>
+    <string name="evento4False">Your workers do overtime.
+                                Do yo earn a lot.
+                                of money!!!</string>
     <string name="coste">Value : </string>
     <string name="creditos">Credits</string>
     <string name="btnAceptar">Accept</string>

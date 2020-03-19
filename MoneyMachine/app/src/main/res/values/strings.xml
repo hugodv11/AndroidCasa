@@ -3,11 +3,31 @@
     <string name="dinero">Dinero:  </string>
     <string name="ganado1">Has ganado </string>
     <string name="ganado2"> mientras estabas fuera!</string>
+
     <string name="evento1">Tus trabajadores están hambrientos.
                     ¿Que tal si organizas una cena para.
                     toda la plantilla</string>
     <string name="evento1True">Tus trabajadores estan más contentos!!!</string>
     <string name="evento1False">Tus trabajadores se desaniman un poco!!!</string>
+    <string name="evento2">La empresa va genial.
+                    Desliza hacia de izquierda para.
+                    ver como están tus empleados</string>
+
+    <string name="evento3">Tus trabajadores quieren.
+                    celebrar una fiesta!!!.</string>
+    <string name="evento3True">Tus trabajadores estan contentos.
+                                pero muy cansados!!!</string>
+    <string name="evento3False">Tus trabajadores se enfadan!!!.
+                                Pero están más descansados</string>
+
+    <string name="evento4">Tus trabajadores están cansados.
+                    ¿Les das un par de dias libres?</string>
+    <string name="evento4True">Tus trabajadores están mas.
+                                descansados y contentos!!!.
+                                Pierdes bastante dinero</string>
+    <string name="evento4False">Tus trabajadores hacen horas extra.
+                                Ganas un montón de dinero!!!</string>
+
     <string name="coste">Coste : </string>
     <string name="creditos">Créditos</string>
     <string name="btnAceptar">Aceptar</string>
