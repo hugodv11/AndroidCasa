@@ -22,22 +22,64 @@ import java.util.TimerTask;
 
 public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
 
-    private SurfaceHolder surfaceHolder;  //Interfaz abstracta para manejar la superficie de dibujado
-    private Context context;              //Contexto de la aplicación
-    private Bitmap bitmapFondo;           //Imagen de fondo
-    private int anchoPantalla = 1;        //Ancho de pantalla, su valor se actualiza en el método SurfaceChanged
-    private int altoPantalla = 1;         //Alto de pantalla, su valor se actualiza en el método SurfaceChanged
-    private  Hilo hilo;                   //Hilo encargado de dibujar y actualizar física
-    private boolean funcionando = false;  //Control del hilo
-    private int btnPulsado, btnNormal;
-    //Control de la musica
-    public static MediaPlayer mediaPlayer;
+    /**
+     * Interfaz abstracta para manejar la superficie de dibujado
+     */
+    private SurfaceHolder surfaceHolder;
+    /**
+     * Contexto de la aplicación
+     */
+    private Context context;
+    /**
+     * Imagen de fondo
+     */
+    private Bitmap bitmapFondo;
+    /**
+     * Ancho de pantalla, su valor se actualiza en el método SurfaceChanged
+     */
+    private int anchoPantalla = 1;
+    /**
+     * Alto de pantalla, su valor se actualiza en el método SurfaceChanged
+     */
+    private int altoPantalla = 1;
+    /**
+     * Hilo encargado de dibujar y actualizar física
+     */
+    private  Hilo hilo;
+    /**
+     * Control del hilo
+     */
+    private boolean funcionando = false;
+    /**
+     * Imagen del boton pulsado
+     */
+    private int btnPulsado;
+    /**
+     * Imagen del boton normal
+     */
+    private int btnNormal;
 
-    //Variables control de escenas
+    /**
+     * Objeto encargado del control de la música del juego
+     */
+    public static MediaPlayer mediaPlayer;
+    /**
+     * Objecto que representa la escena actual
+     */
     Escenas escenaActual;
+    /**
+     * id de la escena que se quiere mostrar a continuación
+     */
     int nuevaEscena;
+    /**
+     * Objeto encargado de capturar los gestos en pantalla
+     */
     public GestureDetectorCompat detectorDeGestos;
-    //Constructor //Donde se inicializan las variables
+
+    /**
+     * Contructor de la clase
+     * @param context contexto de la aplicación
+     */
     public PruebaSurfaceView(Context context) {
         super(context);
         this.surfaceHolder = getHolder();
@@ -55,7 +97,11 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
     }//end contructor
 
 
-
+    /**
+     * Metodo que captura las pulsaciones en la pantalla
+     * @param event evento
+     * @return devuelve un booleano
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -102,11 +148,10 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         return true;
     }//end method onTouch
 
-
-
-
-    //Se ejecuta inmediatamente después de que la creación de la superficie de dibujo.
-    //En cuanto se crea el SurfaceView se lanze el hilo
+    /**
+     * Se ejecuta inmediatamente después de que la creación de la superficie de dibujo
+     * @param surfaceHolder
+     */
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         hilo.setFuncionando(true);
@@ -118,10 +163,14 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         }//end if
     }//end method surfaceCreated
 
-
-    //Se ejecuta inmediatamente después de que la superficie de dibujo tenga cambios o bien
-    //de tamaño o bien de forma.
-    //Si hay algún cambio en la superficie de dibujo(normalmente su tamaño) obtenemos el nuevo tamaño
+    /**
+     * Se ejecuta inmediatamente después de que la superficie de dibujo tenga cambios o bien
+     * de tamaño o bien de forma
+     * @param surfaceHolder
+     * @param format
+     * @param width nuevo ancho
+     * @param height nuevo alto
+     */
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
         anchoPantalla = width;
@@ -136,11 +185,10 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         hilo.setSurfaceSize(width, height);
     }//end method surfaceChanged
 
-
-
-
-    //Se ejecuta inmediatamente antes de la destruccíon de la superficie de dibujo
-    //Al finalizar el surface, se para el hilo
+    /**
+     * Se ejecuta inmediatamente antes de la destruccíon de la superficie de dibujo
+     * @param surfaceHolder
+     */
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         //Se llama al metodo guardar datos
@@ -153,35 +201,34 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         }
     }//end method surfaceDestroyed
 
-
-
-
-
-    //Clase Hilo en la cual se ejecuta el método de dibujo y de física para que se haga en paralelo con la
-    //gestión de la interfaz de usuario.
+    /**
+     * Clase Hilo en la cual se ejecuta el método de dibujo y de física para que se haga en paralelo con la
+     * gestión de la interfaz de usuario
+     */
     class Hilo extends Thread {
 
+        /**
+         * Metodo que ocurre cuando el hilo esta en funcionamiento
+         */
         @Override
         public void run() {
+            long tiempoDormido = 0; //Tiempo que va a dormir el hilo
+            final int FPS = 30;
+            final int TPS = 1000000000; //Ticks en un segundo para la función nanoTime()
+            final int FRAGMENTO_TEMPORAL = TPS/FPS; //Espacio de tiempo en el que haremos todo de forma repetida
+            //Tomamos un tiempo de referencia
+            long tiempoReferencia = System.nanoTime();
+
             while(funcionando){
                 Canvas c = null; //Siempre es necesario repintar todo el lienzo
                 try{
                     if(!surfaceHolder.getSurface().isValid()) continue; //Si la superficie no está preparada repetimos
                     c = surfaceHolder.lockCanvas(); //Obtenemos el lienzo con aceleración de software
-                    //c = surfaceHolder.lockHardwareCanvas(); //Obtenemos el lienzo con aceleracion Hw. Desde la API 26
                     if(c != null) {
                         synchronized (surfaceHolder) { //La sincronización es necesario por ser recurso común
                             if (escenaActual != null) {
                                 escenaActual.dibujar(c);
-                                if(escenaActual instanceof EscenaOpciones){
-                                    MediaPlayer newmediaPlayer = ((EscenaOpciones) escenaActual).cambiarSonido(mediaPlayer);
-                                    if(newmediaPlayer != mediaPlayer){
-                                        mediaPlayer.stop();
-                                        newmediaPlayer.start();
-                                        mediaPlayer = newmediaPlayer;
-                                    }//end if
-                                }//end if
-
+                                escenaActual.actualizarFisica();
                             }//end if
                         }//end synchronized
                     }//end if
@@ -190,15 +237,39 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
                         surfaceHolder.unlockCanvasAndPost(c);
                     }//end if
                 }//end finally
+
+                //Calculamos el siguiente instante temporal donde volvemos a actualizar y pintar
+                tiempoReferencia += FRAGMENTO_TEMPORAL;
+
+                //El tiempo que duerme será el siguiente menos el actual
+                tiempoDormido = tiempoReferencia - System.nanoTime();
+
+                //Si tarda mucho dormimos
+                if(tiempoDormido > 0){
+                    try{
+                        Thread.sleep(tiempoDormido / 1000000);
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }//end catch
+                }//end if
             }//end while
         }//end run
 
-        //Activa o desactiva el funcionamiento del hilo
+        /**
+         * Activa o desactiva el funcionamiento del hilo
+         * @param flag indica si se activa o desctiva el hilo
+         */
         void setFuncionando(boolean flag){
             funcionando = flag;
         }//end setFuncionando
 
         //Función llamada si cambia el tamaño del view
+
+        /**
+         * Función llamada si cambia el tamaño del view
+         * @param width nuevo ancho
+         * @param height nuevo alto
+         */
         public void setSurfaceSize(int width, int height){
             synchronized (surfaceHolder){
                 if(bitmapFondo != null){

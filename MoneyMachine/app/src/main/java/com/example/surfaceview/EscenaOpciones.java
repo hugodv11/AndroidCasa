@@ -161,6 +161,10 @@ public class EscenaOpciones extends Escenas {
         }//end else
     }//end method void
 
+    @Override
+    public void actualizarFisica() {
+        super.actualizarFisica();
+    }
 
 
 }//end class escena

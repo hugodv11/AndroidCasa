@@ -18,8 +18,65 @@ import java.util.HashMap;
  * Clase que se encarga de dibujar la pantalla de trabajadores
  */
 public class EscenaTrabajadores extends Escenas {
-    Rect btnNumTrabajadores, btnSalud, btnEnergia, btnVolver, btnContenedor, btnSubirEnergia, btnAyuda;
-    Bitmap bitmapNumero, bitmapSalud, bitmapEnergia, bitmapVolver, bitmapContenedor, bitmapAyuda, bitmapBtnAyuda;
+    /**
+     * Cuadrado que representa el numero de trabajadores
+     */
+    Rect btnNumTrabajadores;
+    /**
+     * Cuadrado que representa la salud de los trabajadores
+     */
+    Rect btnSalud;
+    /**
+     * Cuadrado que representa la energía de los trabajadores
+     */
+    Rect btnEnergia;
+    /**
+     * Cuadrado que representa el botón de retroceso
+     */
+    Rect btnVolver;
+    /**
+     * Cuadrado que representa el contenedor
+     */
+    Rect btnContenedor;
+    /**
+     * Cuadrado que representa el botón de recargar energía
+     */
+    Rect btnSubirEnergia;
+    /**
+     * Cuadrado que representa el botón de ayuda
+     */
+    Rect btnAyuda;
+    /**
+     * Imagen del numero de trabajadores
+     */
+    Bitmap bitmapNumero;
+    /**
+     * Imagen de la salud de los trabajadores
+     */
+    Bitmap bitmapSalud;
+    /**
+     * Imagen de la energía de los trabajadores
+     */
+    Bitmap bitmapEnergia;
+    /**
+     * Imagen del botón de retroceso
+     */
+    Bitmap bitmapVolver;
+    /**
+     * Imagen del contenedor
+     */
+    Bitmap bitmapContenedor;
+    /**
+     * Imagen del botón de ayuda
+     */
+    Bitmap bitmapAyuda;
+    /**
+     * Imagen de la pantalla de ayuda
+     */
+    Bitmap bitmapBtnAyuda;
+    /**
+     * Indica si se debe mostrar la pantalla de ayuda
+     */
     boolean ayuda;
 
     /**
@@ -89,6 +146,11 @@ public class EscenaTrabajadores extends Escenas {
         super.dibujar(c);
     }//end method dibujar
 
+    @Override
+    public void actualizarFisica() {
+        super.actualizarFisica();
+    }
+
     /**
      * Metodo que se lanza cuando se produce una pulsación en la pantalla
      * @param event evento de la pulsación
@@ -120,6 +182,7 @@ public class EscenaTrabajadores extends Escenas {
                 editor.putInt("rellenarEnergia", rellenarEnergia);
                 editor.putInt("energiaTrabajadores", trabajadores.energia);
                 editor.putInt("money", money);
+                editor.commit();
             }//end if
         }//end if
         return numEscena;

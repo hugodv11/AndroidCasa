@@ -5,14 +5,57 @@ package com.example.surfaceview;
  * Contiene métodos con operaciones lógicas para calcular varios datos
  */
 public class Trabajadores {
-    //eficienciatbj es la variable que nos marca cada cuantos minutos nuestros trabajadores
-    //ganan dinero(Completan un ciclo), empezara siendo cada hora, y cuanto mas lo mejores mas ira disminuyendo
-    //dicha variable
-    //Tiempo es cuando tiempo están trabajando, logicamente no van a estar 24h, es un valor que se podrá administrar
-    //CosteEnergia es la energia que gastan por cada ciclo, que viene marcado por la eficiencia, si eficiencia es 30
-    //y costeEnergia es 5, si pasa una hora los trabajadores habran completado dos ciclos y gastado 10 de energia
-    int numero, energia, salud, salario, eficiencia, ganancias, dineroBase, tiempo, costeEnergia;
-    int ciclosDisponibles, ciclosCompletados, dineroCiclo;
+    /**
+     * Numero de trabajadores
+     */
+    int numero;
+    /**
+     * Energia de los trabajadores
+     */
+    int energia;
+    /**
+     * Salud de los trabajadores
+     */
+    int salud;
+    /**
+     * Salario de los trabajadores
+     */
+    int salario;
+    /**
+     * Cada cuanto tiempo los trabajadores completan un ciclo
+     */
+    int eficiencia;
+    /**
+     * Cuanto dinero gana un trabajador por ciclo
+     */
+    int ganancias;
+    /**
+     * Cuanto ganan los traajadores sin tener en cuenta ninguna bonificación
+     */
+    int dineroBase;
+    /**
+     * Tiempo maximo en el que los trabajadores están activos
+     */
+    int tiempo;
+    /**
+     * Cuanta energia gastan los trabajadores por cada ciclo completado
+     */
+    int costeEnergia;
+    /**
+     * Ciclos que los empleados pueden completar
+     */
+    int ciclosDisponibles;
+    /**
+     * Ciclos que los empleados han completados
+     */
+    int ciclosCompletados;
+    /**
+     * Dinero total que han generado los trabajores en un ciclo
+     */
+    int dineroCiclo;
+    /**
+     * Indica si se tiene que mostrar un mensaje con los beneficios o no
+     */
     boolean mensajeBeneficios;
 
     /**

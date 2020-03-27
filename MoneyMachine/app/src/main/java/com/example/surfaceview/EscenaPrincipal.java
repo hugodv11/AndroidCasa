@@ -18,7 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 
-
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,29 +30,74 @@ import java.util.TimerTask;
  */
 public class EscenaPrincipal extends Escenas {
 
-    Rect pulsador, btnMejora, btnOpciones;
-
-    //Variables para el uso del acelerómetro
-    SensorManager sensorManager;
-    Sensor sensor;
-    SensorEventListener sensorEventListener;
-
-    Timer timer, timerEventos;
-    int gap=2000;
-    long tempTiempo=0;
-    int imagenBoton;
-
-    boolean pulsadoBoton, hayAviso, respuesta;
-    int numAviso;
-
     /**
-     * get de la propiedad ImagenBoton
-     * @return devuelve la imagen del boton
+     * Cuadrado que representa el botón rojo
      */
-    public int getImagenBoton() {
-        return imagenBoton;
-    }
-
+    Rect pulsador;
+    /**
+     * Cuadrado que representa el botón de mejoras
+     */
+    Rect btnMejora;
+    /**
+     * Cuadrado que representa el botón de opciones
+     */
+    Rect btnOpciones;
+    /**
+     * Cuadrado que representa el botón de ayuda
+     */
+    Rect btnAyuda;
+    /**
+     * Colección de particulas
+     */
+    ArrayList<Particulas> particulas = new ArrayList<>();
+    /**
+     * Objeto que representa una particula
+     */
+    Particulas particula;
+    /**
+     * Objeto que genera numeros aleatorios
+     */
+    Random random;
+    /**
+     * Objeto que permite acceder al hardware del dispositivo
+     */
+    SensorManager sensorManager;
+    /**
+     * Objeto que representa un elemento de hardware
+     */
+    Sensor sensor;
+    /**
+     * Listener de el objeto sensor
+     */
+    SensorEventListener sensorEventListener;
+    /**
+     * objeto de tipo Timer
+     */
+    Timer timer;
+    /**
+     * Imagen del boton
+     */
+    int imagenBoton;
+    /**
+     * Indica si el boton a sido pulsado
+     */
+    boolean pulsadoBoton;
+    /**
+     * Indica si hay un aviso que mostrar
+     */
+    boolean hayAviso;
+    /**
+     * Indica si hay una respuesta que mostrar
+     */
+    boolean respuesta;
+    /**
+     * Indica si se debe mostrar la pantalla de ayuda
+     */
+    boolean ayuda;
+    /**
+     * ID que identifica cada uno de los avisos disponibles
+     */
+    int numAviso;
     /**
      * set de la propiedad imagenBoton
      * @param imagenBoton int que representa una imagen
@@ -65,14 +110,38 @@ public class EscenaPrincipal extends Escenas {
         }//end if
     }//end set
 
-
-    int randomPosX;
-    movimientoNumero mov;
-    Boolean moverNumero;
-    Boolean shake, oneTime;
-
-    Bitmap bitmapOpciones, bitmapMejoras, bitmapBtn;
-
+    /**
+     * Indica si el dispositivo a sido agitado
+     */
+    Boolean shake;
+    /**
+     * Indica si el disposivo a sido agitado
+     */
+    Boolean oneTime;
+    /**
+     * Imagen del boton de opciones
+     */
+    Bitmap bitmapOpciones;
+    /**
+     * Imagen del boton de mejoras
+     */
+    Bitmap bitmapMejoras;
+    /**
+     * Imagen del boton rojo
+     */
+    Bitmap bitmapBtn;
+    /**
+     * Imagen de la particula
+     */
+    Bitmap bitmapParticula;
+    /**
+     * Imagen del boton de ayuda
+     */
+    Bitmap bitmapbtnAyuda;
+    /**
+     * Imagen de la pantalla de ayuda
+     */
+    Bitmap bitmapAyuda;
 
     /**
      * Constructor de la clase
@@ -84,6 +153,7 @@ public class EscenaPrincipal extends Escenas {
     public EscenaPrincipal(int numEscena, Context context, int altoPantalla, int anchoPantalla, int imagen) {
         super(numEscena, context, altoPantalla, anchoPantalla);
         this.imagenBoton = imagen;
+        random = new Random();
         //Imagen de fondo
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.oficina);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
@@ -92,6 +162,7 @@ public class EscenaPrincipal extends Escenas {
         pulsador = new Rect(anchoPantalla / 3,(altoPantalla/5) * 4,anchoPantalla - anchoPantalla / 3,altoPantalla - altoPantalla / 12);
         btnMejora = new Rect(anchoPantalla - anchoPantalla/9, 0, anchoPantalla, anchoPantalla/9);
         btnOpciones = new Rect(0, 0, anchoPantalla/9,anchoPantalla/9);
+        btnAyuda = new Rect(anchoPantalla - anchoPantalla/9, anchoPantalla/9 * 3, anchoPantalla, anchoPantalla/9 * 4);
 
         //Imagen de botón menu de opciones
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.menu);
@@ -101,9 +172,17 @@ public class EscenaPrincipal extends Escenas {
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.mejora);
         bitmapMejoras = aux.createScaledBitmap(aux, btnOpciones.width(), btnOpciones.height(), true);
 
+        //Imagen de  botón pantalla de mejoras
+        aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayuda);
+        bitmapbtnAyuda = aux.createScaledBitmap(aux, btnAyuda.width(), btnAyuda.height(), true);
+
         //Imagen del botón de la mitad de la pantalla
         aux = BitmapFactory.decodeResource(context.getResources(), imagenBoton);
         bitmapBtn = aux.createScaledBitmap(aux, pulsador.width(), pulsador.height(), true);
+
+        //bitmap de las particulas
+        bitmapParticula = BitmapFactory.decodeResource(context.getResources(), R.drawable.animacionmoney);
+
         //Timer del autoclick
         TimerTask timerTask = new TimerTask() {
             //Dentro de run es donde se pone todo el codigo
@@ -152,7 +231,17 @@ public class EscenaPrincipal extends Escenas {
         pulsadoBoton = false;
         hayAviso = false;
         respuesta = false;
-        moverNumero = false;
+
+        ayuda = false;
+
+        if(!ingles){
+            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayudaprincipal);
+            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
+        }//end if
+        else {
+            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.helpmain);
+            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
+        }//end else
     }//end constructor
 
 
@@ -170,16 +259,12 @@ public class EscenaPrincipal extends Escenas {
             pincelTexto.setTextAlign(Paint.Align.CENTER);
             pincelTexto.setTextSize(40);
             pincelTexto.setAntiAlias(true);
-
-            pincelPrueba.setColor(Color.BLACK);
-            pincelPrueba.setTextSize(70);
-            //pincelPrueba.setAlpha(alpha);
-
             c.drawBitmap(bitmapFondo,0, 0,null);
 
             //Imagenes de los botones
             c.drawBitmap(bitmapOpciones,0, 0, null);
             c.drawBitmap(bitmapMejoras,anchoPantalla - btnOpciones.width(), 0,null);
+            c.drawBitmap(bitmapbtnAyuda,anchoPantalla - anchoPantalla/9, anchoPantalla/9 * 3,null);
             c.drawBitmap(bitmapBtn, anchoPantalla / 3,(altoPantalla/5) * 4, null);
 
             //Si los trabajadores han ganado algo offline lo mostramos
@@ -196,11 +281,49 @@ public class EscenaPrincipal extends Escenas {
                     cuadroConBotones.cuadroBotones(c);
                 }//end if
             }//end else
+
+            if(ayuda) {
+                c.drawBitmap(bitmapAyuda, 0, 0, null);
+            }//end if
+
         }catch(Exception e){
             e.printStackTrace();
         }//end catch
+
+        //Particulas
+        for(int i = 0; i < particulas.size(); i++){
+            if(particulas.get(i).visible){
+                c.drawBitmap(particulas.get(i).imagen, particulas.get(i).posicion.x, particulas.get(i).posicion.y, particulas.get(i).pincelImagen);
+            }//end if
+        }//end for
+
+
         super.dibujar(c);
     }//end method dibujar
+
+    /**
+     * Metodo que se encarga de actualizar el movimiento de los componentes
+     */
+    @Override
+    public void actualizarFisica() {
+
+        for(int i = 0; i < particulas.size(); i++){
+            if(particulas.get(i).alpha <= 0){
+                particulas.get(i).visible = false;
+            }//end if
+
+            if(particulas.get(i).visible){
+                particulas.get(i).moverParticula(5,3);
+                particulas.get(i).actualizarImagen();
+            }//end if
+
+            if(!particulas.get(i).visible){
+                particulas.remove(particulas.get(i));
+            }//end if
+        }//end for
+
+
+    }//end actualizar fisica
 
     /**
      * Metodo que se lanza cuando se produce una pulsación en la pantalla
@@ -211,7 +334,7 @@ public class EscenaPrincipal extends Escenas {
     public int onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
         int y = (int)event.getY();
-        //Comprueba si se tiene que prodducir un evento
+        //Comprueba si se tiene que producir un evento
         comprobar();
 
         if(hayAviso) {
@@ -229,6 +352,12 @@ public class EscenaPrincipal extends Escenas {
         }//end if
         else {
             respuesta = false;
+            if(btnAyuda.contains(x, y)){
+                ayuda = true;
+            }//end if
+            else {
+                ayuda = false;
+            }//end else
             if (btnOpciones.contains(x, y)) {
                 timer.cancel();
                 timer.purge();
@@ -243,6 +372,9 @@ public class EscenaPrincipal extends Escenas {
                 efectos.play(sonidoCoin,1,1,1,0,1);
                 //Si pulsamos dentro del boton cambiamos su sprite
                 pulsadoBoton = true;
+                //Creamos la particula y la añadimos al arrayList
+                particula = new Particulas(bitmapParticula, random.nextInt(anchoPantalla), pulsador.centerY());
+                particulas.add(particula);
                 return numEscena;
             }//end if
             if (btnMejora.contains(x, y)) {
@@ -260,11 +392,6 @@ public class EscenaPrincipal extends Escenas {
         return numEscena;
    }//end onTouchEvent
 
-
-
-
-
-    //Comprueba si se han cumplido los ifs de algunos eventos
 
     /**
      * Comprueba si se cumplen las condiciones de alguno

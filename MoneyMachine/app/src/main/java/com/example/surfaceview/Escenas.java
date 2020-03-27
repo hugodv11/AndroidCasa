@@ -31,52 +31,179 @@ import javax.security.auth.login.LoginException;
  * Escena padre que se encarga de cargar todos los recursos necesarios para las demas escenas
  */
 public class Escenas {
-    //ATRIBUTOS PARA LAS ESCENAS
+
+    /**
+     * Representa la escena actual
+     */
     int numEscena;
+    /**
+     * Contexto de la aplicación
+     */
     Context context;
-    int altoPantalla, anchoPantalla;
-    //Pinceles
-    Paint pincelTxt = new Paint();
-    //Sirve para cambiar la fuente
+    /**
+     * Alto de la pantalla del dispositivo
+     */
+    int altoPantalla;
+    /**
+     * Ancho de la pantalla del dispositivo
+     */
+    int anchoPantalla;
+    /**
+     * Pincel del texto
+     */
+    Paint pincelTxt;
+    /**
+     * Objeto que permte cambiar el tipo de fuente
+     */
     Typeface faw;
-    Paint pincelRec = new Paint();
-    Paint pincelPrueba = new Paint();
-    //Pinceles que se usan para la creación de cuadros de dialogo
-    Paint pincelFondo = new Paint();
-    Paint pincelCuadro = new Paint();
-    Paint pincelTexto = new Paint();
-    //Variable para controlar el vibrador
+    /**
+     * Pincel de los cuadrados
+     */
+    Paint pincelRec;
+    /**
+     * Pincel de la imagen de fondo
+     */
+    Paint pincelFondo;
+    /**
+     * Pincel del cuadro de pantalla aviso
+     */
+    Paint pincelCuadro;
+    /**
+     * Pincel del texto de pantalla aviso
+     */
+    Paint pincelTexto;
+    /**
+     * objeto que representa el vibrador del dispositivo
+     */
     Vibrator vibrator;
-    //Variables para el control de sonido
-    //Efectos de sonido
+    /**
+     * Objecto que permite generar sonidos
+     */
     public AudioManager audioManager;
+    /**
+     * Coleccion de sonidos
+     */
     public SoundPool efectos;
+    /**
+     * Representa un archivo de audio oon el sonido de una moneda
+     */
     public int sonidoCoin;
+    /**
+     * Maximo de sonidos simultaneos
+     */
     public int maxSonidosSimultaneos = 10;
-    //Control de gestos
+    /**
+     * objeto encargado de capturar los gestos que se producen en la pantalla
+     */
     public GestureDetectorCompat detectorDeGestos;
-    //Bitmap que se una para dibujar los fondos, la clase que lo hereda lo define;
+    /**
+     * Imagen de fondo
+     */
     Bitmap bitmapFondo;
-    //Bitmap auxiliar que utilizamos para luego rescalar la imagen al tamaño de la pantalla
+    /**
+     * bitmap auxiliar utilizado para redimensionar las imagenes
+     */
     Bitmap aux;
-    //Objetos de la clase pantallaAviso para generar cuadros de dialogo
-    pantallaAvisos avisoDineroOffline, cuadroConBotones, cuadroAviso;
-    //Variables con los valores que rescatamos del shared preference
-    int money, dineroPulsacion, autoclick, tiempoAutoclick, moneyOffline;
-    int costoMejoraPulsacion, costoMejoraAutoclick, costoTiempoAutoclick;
+    /**
+     * Objeto que permite generar una pantalla de aviso
+     */
+    pantallaAvisos avisoDineroOffline;
+    /**
+     * Objeto que permite generar una pantalla de aviso
+     * En este caso con botones
+     */
+    pantallaAvisos cuadroConBotones;
+    /**
+     * Objeto que permite generar una pantalla de aviso
+     */
+    pantallaAvisos cuadroAviso;
+    /**
+     * Dinero que posee el jugador
+     */
+    int money;
+    /**
+     * Dinero generado con cada pulsación
+     */
+    int dineroPulsacion;
+    /**
+     * Dinero que se genera con el autoclick
+     */
+    int autoclick;
+    /**
+     * Cada cuanto tiempo se produce el autoclick
+     */
+    int tiempoAutoclick;
+    /**
+     * Cuando dinero se ha ganado offline
+     */
+    int moneyOffline;
+    /**
+     * Dinero necesario para mejorar cuanto dinero que gana con una pulsación
+     */
+    int costoMejoraPulsacion;
+    /**
+     * Dinero necesario para mejorar cuanto genera el autoclick
+     */
+    int costoMejoraAutoclick;
+    /**
+     * Dinero necesario para mejorar cada cuanto se produce el autoclick
+     */
+    int costoTiempoAutoclick;
+    /**
+     * Dinero necesario para rellenar la energia
+     */
     int rellenarEnergia;
-    //Variables utilizadas para el calculo de tiempo fuera de la app
-    int horaAn, minutosAn, diffTiempo, diffMin;
-    //Objeto de tipo trabajadores
+    /**
+     * Hora de la ultima conexión
+     */
+    int horaAn;
+    /**
+     * Minutos de la ultima conexión
+     */
+    int minutosAn;
+    /**
+     * Diferencia de tiempo entre la ultima hora de conexión y la actual
+     */
+    int diffTiempo;
+    /**
+     * Diferencia de minutos entre la ultima hora de conexión y la actual
+     */
+    int diffMin;
+    /**
+     * Objeto que representa a los trabajadores
+     */
     Trabajadores trabajadores = new Trabajadores();
-    //Se utiliza para la consistencia de datos
+    /**
+     * Objeto donde se guardan todos los datos
+     */
     SharedPreferences preferences;
+    /*
+     * Objeto que permite editar el sharedPreferences
+     */
     SharedPreferences.Editor editor;
-    //Tiempo actual
+    /**
+     * Fecha actual
+     */
     Date currentTime;
-    //flags de los eventos
-    boolean flag1, flag2, flag3, flag4;
-    //Idiomas
+    /**
+     * Booleana que indica si el evento 1 ya a ocurrido
+     */
+    boolean flag1;
+    /**
+     * Booleana que indica si el evento 2 ya a ocurrido
+     */
+    boolean flag2;
+    /**
+     * Booleana que indica si el evento 3 ya a ocurrido
+     */
+    boolean flag3;
+    /**
+     * Booleana que indica si el evento 4 ya a ocurrido
+     */
+    boolean flag4;
+    /**
+     * Booleana que indica si el idioma activo es el español o el ingles
+     */
     boolean ingles;
 
     /**
@@ -91,6 +218,11 @@ public class Escenas {
         this.context = context;
         this.altoPantalla = altoPantalla;
         this.anchoPantalla = anchoPantalla;
+        pincelTxt = new Paint();
+        pincelCuadro = new Paint();
+        pincelFondo = new Paint();
+        pincelRec = new Paint();
+        pincelTexto = new Paint();
         audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         if((android.os.Build.VERSION.SDK_INT) >= 21){
             SoundPool.Builder spb=new SoundPool.Builder();
@@ -186,6 +318,8 @@ public class Escenas {
         pincelTxt.setColor(Color.BLACK);
         pincelRec.setColor(Color.GREEN);
         try{
+            if(numEscena == 2)
+                pincelTxt.setColor(Color.WHITE);
             c.drawText( context.getResources().getString(R.string.dinero) + " " + money,anchoPantalla/2, 100, pincelTxt);
         }//end try
         catch(Exception e){
@@ -193,6 +327,7 @@ public class Escenas {
         }//end catch
 
     }//end method dibujar
+
     /**
      *Se llama antes de la destrucción de la superficie de dibujo y sirve para guardar datos
      */
@@ -276,4 +411,9 @@ public class Escenas {
     public int  onTouchEvent(MotionEvent event){
         return numEscena;
     }//end onTouchEvent
+
+
+    public void actualizarFisica(){
+
+    }//end actualizarFisica
 }//end class Escenas

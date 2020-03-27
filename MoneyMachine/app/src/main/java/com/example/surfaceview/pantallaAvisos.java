@@ -15,18 +15,67 @@ import android.util.Log;
  * Clase que se utiliza para crear ventanas emergentes en la app
  */
 public class pantallaAvisos {
-
-    private int altoPantalla, anchoPantalla;
+    /**
+     * Alto de pantalla del dispositivo
+     */
+    private int altoPantalla;
+    /**
+     * Ancho de pantalla del dispositivo
+     */
+    private int anchoPantalla;
+    /**
+     * Texto a mostrar
+     */
     private String texto;
+    /**
+     * Contexto de la applicación
+     */
     private Context context;
-    private Paint pincelFondo, pincelCuadro, pincelTexto;
-    private Bitmap bitmapFondo, aux;
+    /**
+     * Pincel de la imagen de fondo
+     */
+    private Paint pincelFondo;
+    /**
+     * Pincel del cuadro
+     */
+    private Paint pincelCuadro;
+    /**
+     * Pincel del texto
+     */
+    private Paint pincelTexto;
+    /**
+     * Imagen de fondo
+     */
+    private Bitmap bitmapFondo;
+    /**
+     * Bitmap auxiliar utilizado para reescalar imagenes
+     */
+    private Bitmap aux;
+    /**
+     * Cuadrado que representa el cuadro
+     */
     private Rect cuadro;
-    public Rect btnAceptar, btnCancelar;
+    /**
+     * Cuadrado que representa el botón aceptar
+     */
+    public Rect btnAceptar;
+    /**
+     * Cuadrado que representa el botón cancelar
+     */
+    public  Rect btnCancelar;
+    /**
+     * Se utiliza para divir en textos mas pequeños la propiedad texto
+     */
     private String[] textos;
 
     /**
-     *
+     * set del texto
+     * @param texto nuevo texto
+     */
+    public void setTexto(String texto) { this.texto = texto; }
+
+    /**
+     * Constuctor de la clase
      * @param altoPantalla alto de la pantalla del dispositivo
      * @param anchoPantalla ancho de la pantalla del dispositivo
      * @param texto //texto que se dibujara en la ventana
@@ -48,68 +97,6 @@ public class pantallaAvisos {
         btnCancelar = new Rect(anchoPantalla/6 * 3, (altoPantalla/3 * 2) - altoPantalla/15, anchoPantalla - anchoPantalla/6, altoPantalla/3 * 2);
     }//end constructor
 
-
-    public int getAltoPantalla() {
-        return altoPantalla;
-    }
-
-    public void setAltoPantalla(int altoPantalla) {
-        this.altoPantalla = altoPantalla;
-    }
-
-    public int getAnchoPantalla() {
-        return anchoPantalla;
-    }
-
-    public void setAnchoPantalla(int anchoPantalla) {
-        this.anchoPantalla = anchoPantalla;
-    }
-
-    public String getTexto() {
-        return texto;
-    }
-
-    public void setTexto(String texto) { this.texto = texto; }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
-    public Paint getPincelFondo() {
-        return pincelFondo;
-    }
-
-    public void setPincelFondo(Paint pincelFondo) {
-        this.pincelFondo = pincelFondo;
-    }
-
-    public Paint getPincelCuadro() {
-        return pincelCuadro;
-    }
-
-    public void setPincelCuadro(Paint pincelCuadro) {
-        this.pincelCuadro = pincelCuadro;
-    }
-
-    public Paint getPincelTexto() {
-        return pincelTexto;
-    }
-
-    public void setPincelTexto(Paint pincelTexto) {
-        this.pincelTexto = pincelTexto;
-    }
-
-    public Bitmap getBitmapFondo() {
-        return bitmapFondo;
-    }
-
-    public void setBitmapFondo(Bitmap bitmapFondo) {
-        this.bitmapFondo = bitmapFondo;
-    }
 
     //METODOS
     /**
