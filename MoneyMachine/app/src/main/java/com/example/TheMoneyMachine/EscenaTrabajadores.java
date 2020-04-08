@@ -1,18 +1,11 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.Image;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-
-import java.util.HashMap;
 
 /**
  * Clase que se encarga de dibujar la pantalla de trabajadores
@@ -111,6 +104,14 @@ public class EscenaTrabajadores extends Escenas {
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayuda);
         bitmapBtnAyuda = aux.createScaledBitmap(aux, btnAyuda.width(), btnAyuda.height(), true);
         ayuda = false;
+        if(!ingles){
+            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayudatrabajadores);
+            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
+        }//end if
+        else {
+            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.helpworkers);
+            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
+        }//end else
     }//end constructor
 
     /**
@@ -132,14 +133,6 @@ public class EscenaTrabajadores extends Escenas {
         c.drawText(trabajadores.energia + "%", anchoPantalla - anchoPantalla/10 * 2, altoPantalla - altoPantalla/6, pincelTxt);
         c.drawText(trabajadores.salud + "%", anchoPantalla/10 * 5, altoPantalla - altoPantalla/6, pincelTxt);
         c.drawText("" + rellenarEnergia, btnSubirEnergia.centerX(),btnSubirEnergia.centerY(), pincelTxt);
-        if(!ingles){
-            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayudatrabajadores);
-            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
-        }//end if
-        else {
-            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.helpworkers);
-            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
-        }//end else
         if(ayuda) {
             c.drawBitmap(bitmapAyuda, 0, 0, null);
         }//end if

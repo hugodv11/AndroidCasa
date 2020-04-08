@@ -1,4 +1,4 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,18 +14,13 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import androidx.core.view.GestureDetectorCompat;
 
 
-import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-
-import javax.security.auth.login.LoginException;
 
 /**
  * Escena padre que se encarga de cargar todos los recursos necesarios para las demas escenas
@@ -223,6 +218,15 @@ public class Escenas {
         pincelFondo = new Paint();
         pincelRec = new Paint();
         pincelTexto = new Paint();
+        //Atributos de los pinceles
+        //Cambiamos la fuente al pincel que utilizamos para pintar el texto
+        faw = Typeface.createFromAsset(context.getAssets(), "acknowtt.ttf");
+        pincelTxt.setTypeface(faw);
+        pincelTxt.setTextSize(80);
+        pincelTxt.setAntiAlias(true);
+        pincelTxt.setTextAlign(Paint.Align.CENTER);
+        pincelTxt.setColor(Color.BLACK);
+        pincelRec.setColor(Color.GREEN);
         audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         if((android.os.Build.VERSION.SDK_INT) >= 21){
             SoundPool.Builder spb=new SoundPool.Builder();
@@ -308,15 +312,6 @@ public class Escenas {
      * @param c  Canvas en el que se va a dibujar
      */
     public void dibujar(Canvas c){
-        //Atributos de los pinceles
-        //Cambiamos la fuente al pincel que utilizamos para pintar el texto
-        faw = Typeface.createFromAsset(context.getAssets(), "acknowtt.ttf");
-        pincelTxt.setTypeface(faw);
-        pincelTxt.setTextSize(80);
-        pincelTxt.setAntiAlias(true);
-        pincelTxt.setTextAlign(Paint.Align.CENTER);
-        pincelTxt.setColor(Color.BLACK);
-        pincelRec.setColor(Color.GREEN);
         try{
             if(numEscena == 2)
                 pincelTxt.setColor(Color.WHITE);

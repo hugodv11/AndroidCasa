@@ -1,10 +1,7 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-
-import javax.security.auth.login.LoginException;
 
 /**
  * Clase que se encarga de capturar los gestos en pantalla

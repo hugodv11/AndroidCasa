@@ -1,26 +1,16 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.core.view.GestureDetectorCompat;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+public class PantallaPrincipal extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * Interfaz abstracta para manejar la superficie de dibujado
@@ -51,6 +41,10 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
      */
     private boolean funcionando = false;
     /**
+     * Objeto encargado del control de la música del juego
+     */
+    public static MediaPlayer mediaPlayer;
+    /**
      * Imagen del boton pulsado
      */
     private int btnPulsado;
@@ -58,11 +52,6 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
      * Imagen del boton normal
      */
     private int btnNormal;
-
-    /**
-     * Objeto encargado del control de la música del juego
-     */
-    public static MediaPlayer mediaPlayer;
     /**
      * Objecto que representa la escena actual
      */
@@ -80,7 +69,7 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
      * Contructor de la clase
      * @param context contexto de la aplicación
      */
-    public PruebaSurfaceView(Context context) {
+    public PantallaPrincipal(Context context) {
         super(context);
         this.surfaceHolder = getHolder();
         this.surfaceHolder.addCallback(this);
@@ -90,10 +79,10 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         detectorDeGestos = new GestureDetectorCompat(context, new DetectorDeGestos());
         btnNormal = R.drawable.boton;
         btnPulsado = R.drawable.botonpulsado;
-        //Musica de la pantalla
         mediaPlayer = MediaPlayer.create(context, R.raw.principal);
         mediaPlayer.setVolume(1, 1);
         mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }//end contructor
 
 
@@ -134,7 +123,7 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
                     break;
                 case 3 : escenaActual = new EscenaTrabajadores(3, context, altoPantalla, anchoPantalla);
                     break;
-                case 4 : escenaActual = new EscenaOpciones(4, context, altoPantalla, anchoPantalla, mediaPlayer);
+                case 4 : escenaActual = new EscenaOpciones(4, context, altoPantalla, anchoPantalla);
                     break;
             }//end switch
         }//end if
@@ -155,6 +144,7 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         hilo.setFuncionando(true);
+        //mediaPlayer.start();
         //Aqui llamaremos a calcular datos
         if(hilo.getState() == Thread.State.NEW) hilo.start();
         if(hilo.getState() == Thread.State.TERMINATED) {
@@ -177,7 +167,6 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
         altoPantalla = height;
         escenaActual = new EscenaPrincipal(1, context,altoPantalla,anchoPantalla, btnNormal);
         //Ponemos la musica
-        mediaPlayer.start();
         //Control temporal y calculo de los datos que lanzamos cuando le damos
         //valor a escenaActual por primera vez.
         escenaActual.controlTemporal();
@@ -200,6 +189,15 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
             e.printStackTrace();
         }
     }//end method surfaceDestroyed
+
+
+    public void pararMusica(){
+        this.mediaPlayer.pause();
+    }//end method pararMusica
+
+    public void iniciarMusica(){
+        this.mediaPlayer.start();
+    }//end method pararMusica
 
     /**
      * Clase Hilo en la cual se ejecuta el método de dibujo y de física para que se haga en paralelo con la
@@ -278,4 +276,4 @@ public class PruebaSurfaceView extends SurfaceView implements SurfaceHolder.Call
             }//end synchronized
         }//end setSurfaceSize
     }//end class Hilo
-}//end class SurfaceView
+}//end class PantallaPrincipal

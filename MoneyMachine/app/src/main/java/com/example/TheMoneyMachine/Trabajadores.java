@@ -1,4 +1,4 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 /**
  * Clase que engloba todos los atributos de los trabajadores

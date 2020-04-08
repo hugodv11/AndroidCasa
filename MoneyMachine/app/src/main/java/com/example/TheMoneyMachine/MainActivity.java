@@ -1,15 +1,18 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 
 /**
  * Clase principal del proyecto
  */
 public class MainActivity extends AppCompatActivity {
+
+
+    public static PantallaPrincipal pantalla;
+    public static int opciones;
 
     /**
      * Se lanza cuando se crea la pantalla
@@ -18,12 +21,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PruebaSurfaceView pantalla = new PruebaSurfaceView(this);
+        pantalla = new PantallaPrincipal(this);
         pantalla.setKeepScreenOn(true);
         setContentView(pantalla);
         //Para poner la aplicación en pantalla completa
         View decorView = getWindow().getDecorView();
-        int opciones = View.SYSTEM_UI_FLAG_FULLSCREEN //Pone la pantalla en modo pantalla completa
+        opciones = View.SYSTEM_UI_FLAG_FULLSCREEN //Pone la pantalla en modo pantalla completa
             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION //Oculta la barra de navegación
             | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -31,4 +34,19 @@ public class MainActivity extends AppCompatActivity {
             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(opciones);
     }//end onCreated
+
+    @Override
+    protected void onPause() {
+        pantalla.pararMusica();
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        pantalla.iniciarMusica();
+        //Para poner la aplicación en pantalla completa
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(opciones);
+        super.onRestart();
+    }
 }//end class MainActivity

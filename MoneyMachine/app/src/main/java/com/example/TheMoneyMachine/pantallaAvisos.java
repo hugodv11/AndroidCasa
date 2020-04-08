@@ -1,4 +1,4 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 
 import android.content.Context;
@@ -8,8 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.Image;
-import android.util.Log;
 
 /**
  * Clase que se utiliza para crear ventanas emergentes en la app

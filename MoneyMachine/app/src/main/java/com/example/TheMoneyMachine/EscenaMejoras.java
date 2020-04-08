@@ -1,18 +1,12 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.Image;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-
-import java.util.HashMap;
 
 /**
  * Clase que se encarga de dibujar la escena de mejoras
@@ -55,7 +49,14 @@ public class EscenaMejoras extends Escenas {
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayuda);
         bitmapBtnAyuda = aux.createScaledBitmap(aux, btnAyuda.width(), btnAyuda.height(), true);
         ayuda = false;
-
+        if(!ingles){
+            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayudamejoras);
+            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
+        }//end if
+        else {
+            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.helpupgrades);
+            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
+        }//end else
         //gestión del scroll
         bitmapScroll = BitmapFactory.decodeResource(context.getResources(), R.drawable.fondoscroll);
         bitmapScroll = Bitmap.createScaledBitmap(bitmapScroll, anchoPantalla, altoPantalla, true);
@@ -84,14 +85,6 @@ public class EscenaMejoras extends Escenas {
         c.drawText(s + " " + costoMejoraPulsacion, mejoraPulsación.centerX() + anchoPantalla / 8, mejoraPulsación.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
         c.drawText(s + " " + costoMejoraAutoclick, mejoraAutoclick.centerX() + anchoPantalla / 8, mejoraAutoclick.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
         c.drawText(s + " " + costoTiempoAutoclick, mejoraTiempoAutoClick.centerX() + anchoPantalla / 8, mejoraTiempoAutoClick.exactCenterY() + pincelTxt.getTextSize() / 4, pincelTxt);
-        if(!ingles){
-            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.ayudamejoras);
-            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
-        }//end if
-        else {
-            aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.helpupgrades);
-            bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
-        }//end else
         if(ayuda) {
             c.drawBitmap(bitmapAyuda, 0, 0, null);
         }//end if

@@ -1,4 +1,4 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 import android.content.Context;
 

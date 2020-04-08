@@ -1,4 +1,4 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,9 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.VibrationEffect;
-import android.util.Log;
 import android.view.MotionEvent;
 
 
@@ -154,6 +152,13 @@ public class EscenaPrincipal extends Escenas {
         super(numEscena, context, altoPantalla, anchoPantalla);
         this.imagenBoton = imagen;
         random = new Random();
+        //Pinceles
+        pincelFondo.setAlpha(150);
+        pincelCuadro.setColor(Color.BLACK);
+        pincelTexto.setColor(Color.WHITE);
+        pincelTexto.setTextAlign(Paint.Align.CENTER);
+        pincelTexto.setTextSize(40);
+        pincelTexto.setAntiAlias(true);
         //Imagen de fondo
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.oficina);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
@@ -252,15 +257,7 @@ public class EscenaPrincipal extends Escenas {
     @Override
     public void dibujar(Canvas c) {
         try {
-            //setAlpha va desde 0(casper) hasta 255(totalmente visible)
-            pincelFondo.setAlpha(150);
-            pincelCuadro.setColor(Color.BLACK);
-            pincelTexto.setColor(Color.WHITE);
-            pincelTexto.setTextAlign(Paint.Align.CENTER);
-            pincelTexto.setTextSize(40);
-            pincelTexto.setAntiAlias(true);
             c.drawBitmap(bitmapFondo,0, 0,null);
-
             //Imagenes de los botones
             c.drawBitmap(bitmapOpciones,0, 0, null);
             c.drawBitmap(bitmapMejoras,anchoPantalla - btnOpciones.width(), 0,null);
@@ -296,8 +293,6 @@ public class EscenaPrincipal extends Escenas {
                 c.drawBitmap(particulas.get(i).imagen, particulas.get(i).posicion.x, particulas.get(i).posicion.y, particulas.get(i).pincelImagen);
             }//end if
         }//end for
-
-
         super.dibujar(c);
     }//end method dibujar
 

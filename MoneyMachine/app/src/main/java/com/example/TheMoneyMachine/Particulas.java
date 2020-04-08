@@ -1,9 +1,8 @@
-package com.example.surfaceview;
+package com.example.TheMoneyMachine;
 
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.util.Log;
 
 /**
  * Clase que se encarga de crear particulas
