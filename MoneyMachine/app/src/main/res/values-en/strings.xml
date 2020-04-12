@@ -32,4 +32,14 @@
     <string name="creditos">Credits</string>
     <string name="btnAceptar">Accept</string>
     <string name="btnCancelar">Cancel</string>
+
+    <string name="minijuegoBloques">Destroy all the.
+                                    blocks to win!!!</string>
+    <string name="minijuegoBloquesVictoria">You win!!!</string>
+    <string name="minijuegoBloquesDerrota">You lost!!!.
+                                           Now you earn less money.
+                                           for each <press></press></string>
+    <string name="minijuegoNave">Dodge the asteroids.
+                                    and hold on to win!!!</string>
+
 </resources>

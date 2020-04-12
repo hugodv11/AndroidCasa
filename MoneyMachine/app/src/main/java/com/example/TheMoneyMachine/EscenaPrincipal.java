@@ -45,6 +45,11 @@ public class EscenaPrincipal extends Escenas {
      */
     Rect btnAyuda;
     /**
+     * Cuadrado que representa el botón para abrir el minijuego
+     */
+    Rect btnMinijuego;
+    Rect btnMinijuego2;
+    /**
      * Colección de particulas
      */
     ArrayList<Particulas> particulas = new ArrayList<>();
@@ -153,12 +158,7 @@ public class EscenaPrincipal extends Escenas {
         this.imagenBoton = imagen;
         random = new Random();
         //Pinceles
-        pincelFondo.setAlpha(150);
-        pincelCuadro.setColor(Color.BLACK);
-        pincelTexto.setColor(Color.WHITE);
-        pincelTexto.setTextAlign(Paint.Align.CENTER);
-        pincelTexto.setTextSize(40);
-        pincelTexto.setAntiAlias(true);
+
         //Imagen de fondo
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.oficina);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
@@ -167,6 +167,8 @@ public class EscenaPrincipal extends Escenas {
         pulsador = new Rect(anchoPantalla / 3,(altoPantalla/5) * 4,anchoPantalla - anchoPantalla / 3,altoPantalla - altoPantalla / 12);
         btnMejora = new Rect(anchoPantalla - anchoPantalla/9, 0, anchoPantalla, anchoPantalla/9);
         btnOpciones = new Rect(0, 0, anchoPantalla/9,anchoPantalla/9);
+        btnMinijuego = new Rect(anchoPantalla/9 * 2, 0, anchoPantalla/9 * 3,anchoPantalla/9 * 3);
+        btnMinijuego2 = new Rect(0, anchoPantalla/9 * 2, anchoPantalla/9 * 3,anchoPantalla/9 * 3);
         btnAyuda = new Rect(anchoPantalla - anchoPantalla/9, anchoPantalla/9 * 3, anchoPantalla, anchoPantalla/9 * 4);
 
         //Imagen de botón menu de opciones
@@ -258,6 +260,8 @@ public class EscenaPrincipal extends Escenas {
     public void dibujar(Canvas c) {
         try {
             c.drawBitmap(bitmapFondo,0, 0,null);
+            c.drawRect(btnMinijuego, pincelRec);
+            c.drawRect(btnMinijuego2, pincelRec);
             //Imagenes de los botones
             c.drawBitmap(bitmapOpciones,0, 0, null);
             c.drawBitmap(bitmapMejoras,anchoPantalla - btnOpciones.width(), 0,null);
@@ -358,6 +362,16 @@ public class EscenaPrincipal extends Escenas {
                 timer.purge();
 
                 return 4;
+            }//end if
+            if(btnMinijuego.contains(x, y)){
+                timer.cancel();
+                timer.purge();
+                return 5;
+            }//end if
+            if(btnMinijuego2.contains(x, y)){
+                timer.cancel();
+                timer.purge();
+                return 6;
             }//end if
             if (pulsador.contains(x, y)) {
                 money += dineroPulsacion;

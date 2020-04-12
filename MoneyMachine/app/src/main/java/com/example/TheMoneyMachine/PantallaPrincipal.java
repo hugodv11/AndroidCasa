@@ -125,6 +125,9 @@ public class PantallaPrincipal extends SurfaceView implements SurfaceHolder.Call
                     break;
                 case 4 : escenaActual = new EscenaOpciones(4, context, altoPantalla, anchoPantalla);
                     break;
+                case 5 : escenaActual = new EscenaMiniJuegoNave(5, context, altoPantalla, anchoPantalla);
+                    break;
+                case 6 : escenaActual = new EscenaMinijuegoBloques(6, context, altoPantalla, anchoPantalla);
             }//end switch
         }//end if
         //Comprobación de los gestos
@@ -191,7 +194,7 @@ public class PantallaPrincipal extends SurfaceView implements SurfaceHolder.Call
     }//end method surfaceDestroyed
 
 
-    public void pararMusica(){
+   public void pararMusica(){
         this.mediaPlayer.pause();
     }//end method pararMusica
 
@@ -210,13 +213,6 @@ public class PantallaPrincipal extends SurfaceView implements SurfaceHolder.Call
          */
         @Override
         public void run() {
-            long tiempoDormido = 0; //Tiempo que va a dormir el hilo
-            final int FPS = 30;
-            final int TPS = 1000000000; //Ticks en un segundo para la función nanoTime()
-            final int FRAGMENTO_TEMPORAL = TPS/FPS; //Espacio de tiempo en el que haremos todo de forma repetida
-            //Tomamos un tiempo de referencia
-            long tiempoReferencia = System.nanoTime();
-
             while(funcionando){
                 Canvas c = null; //Siempre es necesario repintar todo el lienzo
                 try{
@@ -235,21 +231,6 @@ public class PantallaPrincipal extends SurfaceView implements SurfaceHolder.Call
                         surfaceHolder.unlockCanvasAndPost(c);
                     }//end if
                 }//end finally
-
-                //Calculamos el siguiente instante temporal donde volvemos a actualizar y pintar
-                tiempoReferencia += FRAGMENTO_TEMPORAL;
-
-                //El tiempo que duerme será el siguiente menos el actual
-                tiempoDormido = tiempoReferencia - System.nanoTime();
-
-                //Si tarda mucho dormimos
-                if(tiempoDormido > 0){
-                    try{
-                        Thread.sleep(tiempoDormido / 1000000);
-                    }catch (InterruptedException e){
-                        e.printStackTrace();
-                    }//end catch
-                }//end if
             }//end while
         }//end run
 

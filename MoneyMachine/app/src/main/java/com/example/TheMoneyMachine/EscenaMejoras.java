@@ -14,10 +14,9 @@ import android.view.MotionEvent;
 public class EscenaMejoras extends Escenas {
 
     Rect btnVolver, mejoraPulsación, mejoraAutoclick, mejoraTiempoAutoClick, btnAyuda;
-    Bitmap bitmapPulsacion, bitmapAutoclick, bitmapCosteAutoClick, bitmapVolver, bitmapBtnAyuda, bitmapAyuda, bitmapScroll;
+    Bitmap bitmapPulsacion, bitmapAutoclick, bitmapCosteAutoClick, bitmapVolver, bitmapBtnAyuda, bitmapAyuda, bitmapFondo;
     int separacion;
     boolean ayuda;
-    private Scroll[] scrolls;
 
     /**
      * Constructor de la clase
@@ -57,13 +56,6 @@ public class EscenaMejoras extends Escenas {
             aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.helpupgrades);
             bitmapAyuda = aux.createScaledBitmap(aux, anchoPantalla, altoPantalla,true);
         }//end else
-        //gestión del scroll
-        bitmapScroll = BitmapFactory.decodeResource(context.getResources(), R.drawable.fondoscroll);
-        bitmapScroll = Bitmap.createScaledBitmap(bitmapScroll, anchoPantalla, altoPantalla, true);
-        scrolls = new Scroll[2];
-        scrolls[0] = new Scroll(bitmapScroll, altoPantalla);
-        scrolls[1] = new Scroll(bitmapScroll, 0, scrolls[0].posicion.y - bitmapScroll.getHeight());
-
     }//end constructor
 
     /**
@@ -72,8 +64,7 @@ public class EscenaMejoras extends Escenas {
      */
     @Override
     public void dibujar(Canvas c) {
-        c.drawBitmap(scrolls[0].imagen,scrolls[0].posicion.x,scrolls[0].posicion.y,null);
-        c.drawBitmap(scrolls[1].imagen,scrolls[1].posicion.x,scrolls[1].posicion.y,null);
+        c.drawBitmap(bitmapFondo, 0, 0, null);
         //dibujamos imagenes
         c.drawBitmap(bitmapVolver,0,    0,null);
         c.drawBitmap(bitmapPulsacion, anchoPantalla/20, altoPantalla/10, null);
@@ -90,23 +81,6 @@ public class EscenaMejoras extends Escenas {
         }//end if
         super.dibujar(c);
     }//end dibujar
-
-    @Override
-    public void actualizarFisica() {
-        scrolls[0].mover(10);
-        scrolls[1].mover(10);
-
-        //Comprobamos que se sobrepase la pantalla y reiniciamos
-        if(scrolls[0].posicion.y > altoPantalla){
-            scrolls[0].posicion.y = scrolls[1].posicion.y - scrolls[0].imagen.getHeight();
-        }//end if
-
-        if(scrolls[1].posicion.y > altoPantalla){
-            scrolls[1].posicion.y = scrolls[0].posicion.y - scrolls[1].imagen.getHeight();
-        }//end if
-    }//end actualizarFisica
-
-
 
     /**
      * Metodo que se lanza cuando se produce una pulsación en la pantalla

@@ -218,6 +218,12 @@ public class Escenas {
         pincelFondo = new Paint();
         pincelRec = new Paint();
         pincelTexto = new Paint();
+        pincelFondo.setAlpha(150);
+        pincelCuadro.setColor(Color.BLACK);
+        pincelTexto.setColor(Color.WHITE);
+        pincelTexto.setTextAlign(Paint.Align.CENTER);
+        pincelTexto.setTextSize(40);
+        pincelTexto.setAntiAlias(true);
         //Atributos de los pinceles
         //Cambiamos la fuente al pincel que utilizamos para pintar el texto
         faw = Typeface.createFromAsset(context.getAssets(), "acknowtt.ttf");

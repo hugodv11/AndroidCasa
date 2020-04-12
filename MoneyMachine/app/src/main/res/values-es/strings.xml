@@ -34,4 +34,14 @@
     <string name="creditos">Créditos</string>
     <string name="btnAceptar">Aceptar</string>
     <string name="btnCancelar">Cancelar</string>
+
+    <string name="minijuegoBloques">Destruye todos los.
+                                    bloques para ganar!!!</string>
+    <string name="minijuegoBloquesVictoria">Ganaste!!!</string>
+    <string name="minijuegoBloquesDerrota">Perdiste!!!.
+                                           ahora ganas menos dinero.
+                                           con cada pulsación</string>
+    <string name="minijuegoNave">Esquiva los asteroides.
+                                    y aguanta para ganar!!!</string>
+
 </resources>
