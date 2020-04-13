@@ -148,6 +148,7 @@ public class Escenas {
      * Dinero necesario para rellenar la energia
      */
     int rellenarEnergia;
+    Boolean bloqueado;
     /**
      * Hora de la ultima conexión
      */
@@ -266,6 +267,7 @@ public class Escenas {
         costoMejoraAutoclick = preferences.getInt("costoMejoraAutoclick", 70);
         costoTiempoAutoclick = preferences.getInt("costoTiempoAutoClick", 600);
         rellenarEnergia = preferences.getInt("rellenarEnergia", 1000);
+        bloqueado = preferences.getBoolean("bloqueado", false);
         //Valores de la clase Trabajadores
         trabajadores.numero = preferences.getInt("numeroTrabajadores", 1);
         trabajadores.energia = preferences.getInt("energiaTrabajadores", 100);

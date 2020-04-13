@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.VibrationEffect;
+import android.util.Log;
 import android.view.MotionEvent;
 
 
@@ -44,11 +45,6 @@ public class EscenaPrincipal extends Escenas {
      * Cuadrado que representa el botón de ayuda
      */
     Rect btnAyuda;
-    /**
-     * Cuadrado que representa el botón para abrir el minijuego
-     */
-    Rect btnMinijuego;
-    Rect btnMinijuego2;
     /**
      * Colección de particulas
      */
@@ -145,6 +141,9 @@ public class EscenaPrincipal extends Escenas {
      * Imagen de la pantalla de ayuda
      */
     Bitmap bitmapAyuda;
+    Bitmap bitmapbtnBloqueado;
+    pantallaAvisos avisoBloqueo;
+    Boolean pulsacionBLoqueada;
 
     /**
      * Constructor de la clase
@@ -157,8 +156,6 @@ public class EscenaPrincipal extends Escenas {
         super(numEscena, context, altoPantalla, anchoPantalla);
         this.imagenBoton = imagen;
         random = new Random();
-        //Pinceles
-
         //Imagen de fondo
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.oficina);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
@@ -167,8 +164,6 @@ public class EscenaPrincipal extends Escenas {
         pulsador = new Rect(anchoPantalla / 3,(altoPantalla/5) * 4,anchoPantalla - anchoPantalla / 3,altoPantalla - altoPantalla / 12);
         btnMejora = new Rect(anchoPantalla - anchoPantalla/9, 0, anchoPantalla, anchoPantalla/9);
         btnOpciones = new Rect(0, 0, anchoPantalla/9,anchoPantalla/9);
-        btnMinijuego = new Rect(anchoPantalla/9 * 2, 0, anchoPantalla/9 * 3,anchoPantalla/9 * 3);
-        btnMinijuego2 = new Rect(0, anchoPantalla/9 * 2, anchoPantalla/9 * 3,anchoPantalla/9 * 3);
         btnAyuda = new Rect(anchoPantalla - anchoPantalla/9, anchoPantalla/9 * 3, anchoPantalla, anchoPantalla/9 * 4);
 
         //Imagen de botón menu de opciones
@@ -187,6 +182,8 @@ public class EscenaPrincipal extends Escenas {
         aux = BitmapFactory.decodeResource(context.getResources(), imagenBoton);
         bitmapBtn = aux.createScaledBitmap(aux, pulsador.width(), pulsador.height(), true);
 
+        aux = BitmapFactory.decodeResource(context.getResources(), R.drawable.cadenas);
+        bitmapbtnBloqueado = aux.createScaledBitmap(aux, pulsador.width(), pulsador.height(), true);
         //bitmap de las particulas
         bitmapParticula = BitmapFactory.decodeResource(context.getResources(), R.drawable.animacionmoney);
 
@@ -235,6 +232,8 @@ public class EscenaPrincipal extends Escenas {
             }//end method onAccuracyChanged
         };
         sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        avisoBloqueo = new pantallaAvisos(altoPantalla, anchoPantalla, "", context, pincelFondo, pincelCuadro, pincelTexto);
+        pulsacionBLoqueada = false;
         pulsadoBoton = false;
         hayAviso = false;
         respuesta = false;
@@ -260,13 +259,18 @@ public class EscenaPrincipal extends Escenas {
     public void dibujar(Canvas c) {
         try {
             c.drawBitmap(bitmapFondo,0, 0,null);
-            c.drawRect(btnMinijuego, pincelRec);
-            c.drawRect(btnMinijuego2, pincelRec);
             //Imagenes de los botones
             c.drawBitmap(bitmapOpciones,0, 0, null);
             c.drawBitmap(bitmapMejoras,anchoPantalla - btnOpciones.width(), 0,null);
             c.drawBitmap(bitmapbtnAyuda,anchoPantalla - anchoPantalla/9, anchoPantalla/9 * 3,null);
             c.drawBitmap(bitmapBtn, anchoPantalla / 3,(altoPantalla/5) * 4, null);
+            if(bloqueado){
+                c.drawBitmap(bitmapbtnBloqueado, anchoPantalla / 3,(altoPantalla/5) * 4, null);
+                if(pulsacionBLoqueada){
+                    avisoBloqueo.setTexto("El botón está bloqueado!!. Gana un minijuego. para desbloquearlo");
+                    avisoBloqueo.cuadroBotones(c);
+                }//end if
+            }//end if
 
             //Si los trabajadores han ganado algo offline lo mostramos
             if(trabajadores.mensajeBeneficios){
@@ -286,6 +290,7 @@ public class EscenaPrincipal extends Escenas {
             if(ayuda) {
                 c.drawBitmap(bitmapAyuda, 0, 0, null);
             }//end if
+
 
         }catch(Exception e){
             e.printStackTrace();
@@ -351,6 +356,18 @@ public class EscenaPrincipal extends Escenas {
         }//end if
         else {
             respuesta = false;
+            if(pulsacionBLoqueada){
+                if(avisoBloqueo.btnAceptar.contains(x, y )){
+                    pulsacionBLoqueada = false;
+                    bloqueado = false;
+                    int number = random.nextInt(2) + 5;
+                    Log.i("random", "" + number);
+                    return number;
+                }//end if
+                else{
+                    pulsacionBLoqueada = false;
+                }//end else
+            }//end if
             if(btnAyuda.contains(x, y)){
                 ayuda = true;
             }//end if
@@ -363,28 +380,32 @@ public class EscenaPrincipal extends Escenas {
 
                 return 4;
             }//end if
-            if(btnMinijuego.contains(x, y)){
-                timer.cancel();
-                timer.purge();
-                return 5;
-            }//end if
-            if(btnMinijuego2.contains(x, y)){
-                timer.cancel();
-                timer.purge();
-                return 6;
-            }//end if
+
             if (pulsador.contains(x, y)) {
-                money += dineroPulsacion;
-                editor.putInt("money", money).commit();
-                //Sonido que se genera
-                int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                efectos.play(sonidoCoin,1,1,1,0,1);
-                //Si pulsamos dentro del boton cambiamos su sprite
-                pulsadoBoton = true;
-                //Creamos la particula y la añadimos al arrayList
-                particula = new Particulas(bitmapParticula, random.nextInt(anchoPantalla), pulsador.centerY());
-                particulas.add(particula);
-                return numEscena;
+                if(bloqueado){
+                    pulsacionBLoqueada = true;
+                }//end if
+                else {
+                    int val = random.nextInt(30);
+                    if (val == 1) {
+                        bloqueado = true;
+                    }//end if
+                    else {
+                        if (!bloqueado) {
+                            money += dineroPulsacion;
+                            editor.putInt("money", money).commit();
+                            //Sonido que se genera
+                            int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                            efectos.play(sonidoCoin, 1, 1, 1, 0, 1);
+                            //Si pulsamos dentro del boton cambiamos su sprite
+                            pulsadoBoton = true;
+                            //Creamos la particula y la añadimos al arrayList
+                            particula = new Particulas(bitmapParticula, random.nextInt(anchoPantalla), pulsador.centerY());
+                            particulas.add(particula);
+                        }//end if
+                    }//end else
+                }//end else
+                //return numEscena;
             }//end if
             if (btnMejora.contains(x, y)) {
                 timer.cancel();

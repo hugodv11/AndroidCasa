@@ -102,6 +102,7 @@ public class pantallaAvisos {
      * @param c canvas en el que se va a dibujar
      */
     public void cuadroEstandar(Canvas c){
+        pincelCuadro.setColor(Color.BLACK);
         aux = BitmapFactory.decodeResource(context.getResources(), R.drawable.mejoras);
         bitmapFondo = aux.createScaledBitmap(aux,anchoPantalla, altoPantalla,true);
         this.textos = texto.split("\\.");
