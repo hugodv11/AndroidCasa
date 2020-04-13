@@ -141,8 +141,17 @@ public class EscenaPrincipal extends Escenas {
      * Imagen de la pantalla de ayuda
      */
     Bitmap bitmapAyuda;
+    /**
+     * Imagen que representa el botón bloqueado
+     */
     Bitmap bitmapbtnBloqueado;
+    /**
+     * Objeto de la clase pantallaAvisos
+     */
     pantallaAvisos avisoBloqueo;
+    /**
+     * Indica si la pulsación ha sido bloqueada porque el botón está bloqueado
+     */
     Boolean pulsacionBLoqueada;
 
     /**
@@ -360,8 +369,8 @@ public class EscenaPrincipal extends Escenas {
                 if(avisoBloqueo.btnAceptar.contains(x, y )){
                     pulsacionBLoqueada = false;
                     bloqueado = false;
+                    editor.putBoolean("bloqueado", bloqueado).commit();
                     int number = random.nextInt(2) + 5;
-                    Log.i("random", "" + number);
                     return number;
                 }//end if
                 else{
@@ -389,6 +398,7 @@ public class EscenaPrincipal extends Escenas {
                     int val = random.nextInt(30);
                     if (val == 1) {
                         bloqueado = true;
+                        editor.putBoolean("bloqueado", bloqueado).commit();
                     }//end if
                     else {
                         if (!bloqueado) {

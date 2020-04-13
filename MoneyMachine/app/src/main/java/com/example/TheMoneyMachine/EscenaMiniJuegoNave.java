@@ -15,29 +15,93 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Clase que representa el minijuego de la nave
+ */
 public class EscenaMiniJuegoNave extends Escenas {
-
+    /**
+     * bitmap con efecto scroll
+     */
     public Bitmap bitmapScroll;
+    /**
+     * Colección que se utiliza para pintar el scroll
+     */
     public Scroll[] scrolls;
+    /**
+     * Cuadrado que representa la mitad izquierda del dispositivo
+     */
     public Rect izquierda;
+    /**
+     * Cuadrado que representa la mitad derecha del dispositivo
+     */
     public Rect derecha;
+    /**
+     * Cuadrado que representa al jugador
+     */
     public Rect cuadroJugador;
+    /**
+     * Cuadrado que representa a cada asteroide
+     */
     public Rect cuadroAsteroide;
+    /**
+     * Cuadrado que representa las vidas del jugador
+     */
     public Rect cuadroVidas;
+    /**
+     * Objeto de la clase jugador
+     */
     public jugador jugador;
+    /**
+     * Bitmap que representa al jugador
+     */
     public Bitmap bitmapJugador;
+    /**
+     * Bitmap que representa a los enemigos
+     */
     public Bitmap bitmapEnemigo;
+    /**
+     * Bitmap que representa las vidas
+     */
     public Bitmap bitmapVidas;
+    /**
+     * Velocidad de movimiento
+     */
     public int velocidad;
+    /**
+     * Colección de enemigos
+     */
     public ArrayList<enemigos> coleccionEnemigos = new ArrayList<>();
+    /**
+     * Objeto de tipo enemigo
+     */
     public enemigos enemigo;
+    /**
+     * Objeto Timer
+     */
     public Timer timer;
+    /**
+     * Numero de vidas
+     */
     public int vidas;
-    public int separacion;
+    /**
+     * Objeto de la clase pantallaAvisos
+     */
     public pantallaAvisos aviso;
+    /**
+     * Indica si el juego está activo
+     */
     public boolean activo;
+    /**
+     * Indica si el jugador ha perdido
+     */
     public boolean derrota;
+    /**
+     * Indica si el jugador a ganado
+     */
     public boolean victoria;
+    /**
+     * Indica el tiempo que se tiene que aguantar para ganar
+     */
     public int tiempo;
 
 
@@ -67,7 +131,6 @@ public class EscenaMiniJuegoNave extends Escenas {
         aux = BitmapFactory.decodeResource(context.getResources(),R.drawable.lives);
         bitmapVidas = aux.createScaledBitmap(aux, cuadroVidas.width(), cuadroVidas.height(), true);
         vidas = 3;
-        separacion = 0;
 
         jugador = new jugador(bitmapJugador, anchoPantalla / 3, (altoPantalla/5) * 4);
         velocidad = 0;
@@ -98,10 +161,13 @@ public class EscenaMiniJuegoNave extends Escenas {
             }//end run
         };
         timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0, 1200);
-
+        timer.scheduleAtFixedRate(timerTask, 0, 800);
     }//end constructor
 
+    /**
+     * Metodo que se encarga de dibuja en el canvas
+     * @param c  Canvas en el que se va a dibujar
+     */
     @Override
     public void dibujar(Canvas c) {
         c.drawBitmap(scrolls[0].imagen,scrolls[0].posicion.x,scrolls[0].posicion.y,null);
@@ -125,6 +191,9 @@ public class EscenaMiniJuegoNave extends Escenas {
         }//end if
     }//end dibujar
 
+    /**
+     * Metodo que se encarga de actualizar el movimiento de los componentes
+     */
     @Override
     public void actualizarFisica() {
         //Gestión del scroll
@@ -161,6 +230,11 @@ public class EscenaMiniJuegoNave extends Escenas {
         }//end if
     }//end actualizarFisica
 
+    /**
+     * Metodo que se lanza cuando se produce una pulsación en la pantalla
+     * @param event evento de la pulsación
+     * @return devuelve el número de escena que se debe dibujar
+     */
     @Override
     public int onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
@@ -194,29 +268,60 @@ public class EscenaMiniJuegoNave extends Escenas {
         return numEscena;
     }//end onTouchEvent
 
+
+    /**
+     * Metodo encargado de dibujar las vidas restantes del jugador
+     * @param c canvas donde se va a dibujar
+     */
     public void dibujarVidas(Canvas c){
+        int separacion = 0;
+        int calculo =  (anchoPantalla / 3) / 3;
         for(int i = 0; i < vidas; i++){
             c.drawBitmap(bitmapVidas, anchoPantalla / 3 + separacion, 0, null);
-            separacion += bitmapVidas.getWidth() + anchoPantalla / 12;
+            separacion += calculo;
         }//end for
-        separacion = 0;
     }//end method dibujarVidas;
 
+    /**
+     * Clase que representa al jugador
+     */
     public class jugador{
+        /**
+         * Imagen que representa al jugador
+         */
         public Bitmap imagen;
+        /**
+         * Posición del objeto en la pantalla
+         */
         public PointF posicion;
+        /**
+         * Cuadrado encargado de detectar colisiones
+         */
         public Rect detectorColision;
 
+        /**
+         * Constructor de la clase
+         * @param imagen imagen que va a representar al jugador
+         * @param x coordenada x
+         * @param y coordenada y
+         */
         public jugador(Bitmap imagen, float x, float y) {
             this.imagen = imagen;
             this.posicion = new PointF(x, y);
             setRectangulos();
         }//end constructor
 
+        /**
+         * Metodo que actualiza el detector de colisiones cada vez que el objeto se mueve
+         */
         public void setRectangulos(){
             detectorColision = new Rect((int)posicion.x, (int)posicion.y, (int)posicion.x + imagen.getWidth(), (int)posicion.y + imagen.getHeight());
         }//end setRectangulos
 
+        /**
+         * Metodo encargado de mover al jugador por pantalla
+         * @param velocidad velocidad de movimiento
+         */
         public void moverJugador(int velocidad){
             posicion.x += velocidad;
             setRectangulos();
@@ -229,12 +334,32 @@ public class EscenaMiniJuegoNave extends Escenas {
         }//end method moverJugador
     }//end clase jugador
 
+    /**
+     * Clase que representa a los enemigos
+     */
     public class enemigos{
+        /**
+         * Imagen que representa al jugador
+         */
         public Bitmap imagen;
+        /**
+         * Posición del objeto en la pantalla
+         */
         public PointF posicion;
+        /**
+         * Cuadrado encargado de detectar colisiones
+         */
         public Rect detectorColision;
+        /**
+         * Objeto de la clase Random
+         */
         public Random random;
 
+        /**
+         * Constructor de la clase
+         * @param imagen Imagen que va a representar al enemigo
+         * @param y coordenada y
+         */
         public enemigos(Bitmap imagen, float y) {
             this.imagen = imagen;
             random = new Random();
@@ -243,11 +368,18 @@ public class EscenaMiniJuegoNave extends Escenas {
             setRectangulos();
         }//end constructor
 
+        /**
+         * Metodo encargado de mover al enemigo por pantalla
+         * @param velocidad velocidad de movimiento
+         */
         public void moverEnemigo(int velocidad){
             posicion.y += velocidad;
             setRectangulos();
         }//end method moverEnemigo
 
+        /**
+         * Metodo que actualiza el detector de colisiones cada vez que el objeto se mueve
+         */
         public void setRectangulos(){
             detectorColision = new Rect((int)posicion.x, (int)posicion.y, (int)posicion.x + imagen.getWidth(), (int)posicion.y + imagen.getHeight());
         }//end setRectangulos
